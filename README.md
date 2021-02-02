@@ -17,5 +17,6 @@ mv taylor2020_100955cells_11569genes_20210129_scvi movel
 https://github.com/Munfred/scvi-de-flask/releases
 
 
-** Note on loading other adata files **
+**Note on loading other adata files**
+
 At the moment the code relies on the specific names of the adata.obs for cells and experiments, which here are `cell_type` and `experiment_code` so if the new model adata file you load has different column names, you'll need to change the code to match
