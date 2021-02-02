@@ -82,9 +82,9 @@ app.register_blueprint(tables)
 def clientside_table():
     return render_template("clientside_table.html")
 
-@app.route("/test")
-def test():
-    return render_template("test.html")
+@app.route("/results")
+def results():
+    return render_template("results.html")
 
 @app.route('/submit', methods=['POST', 'GET'])
 def receive_submission():
@@ -215,7 +215,7 @@ def receive_submission():
     # selected_groups_df.to_csv(timestamp + 'selected_groups.csv')
 
 
-    return redirect(url_for('test'))
+    return redirect(url_for('results'))
 
 @app.route("/get_results_csv")
 def get_results_csv():
@@ -233,7 +233,7 @@ def get_groups_csv():
 
 @app.route("/get_plot")
 def get_plot():
-    with open("./scdefg/static/fig.html") as fp:
+    with open("./static/fig.html") as fp:
         csv = fp.read()
     return Response( csv, mimetype="text/html",
         headers={"Content-disposition":"attachment; filename=fig.html"})

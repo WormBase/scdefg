@@ -135,3 +135,5 @@ model/
 results.csv
 selected_groups.csv
 static/fig.html
+/workspace.xml
+.idea/

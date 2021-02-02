@@ -93,7 +93,7 @@ $(document).ready(function () {
                     'genes': json_genes,
                 });
                 // location.reload();
-                location.replace("/test");
+                location.replace("/results");
             }
             alert('You submitted \n ' + ncells1 + ' cells in group 1 and ' + ncells2 + ' cells in group 2. \n ...it will take a few seconds to process');
         }
