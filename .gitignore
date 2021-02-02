@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+/census.csv
+.idea/other.xml
+.idea/scvi-de-flask.iml
+.idea/vcs.xml
+model/
+results.csv
+selected_groups.csv
+static/fig.html
