@@ -1,0 +1,14 @@
+
+### scdefg: scvi on Colab for differential expression with a Flask GUI
+
+*This app uses [scvi-tools](https://scvi-tools.org) and is made to run on a
+ Google Colab instance with a GPU.   
+ The code for this app and more information is available at
+[https://github.com/munfred/scdefg](https://github.com/munfred/scdefg)*
+
+By using a GPU scvi-tools allows you to quickly perform differential expression 
+on single cell RNA sequencing data.   
+Just select cell types and experiments to compare and some genes to highlight.   
+It will produce an interactive volcano plot and a csv file with results *in just a few seconds*! Try it! 
+
+

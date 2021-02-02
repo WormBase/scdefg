@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<head>
+    {% block title %}{% endblock %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato"/>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+
+    <style type="text/css">
+
+
+        .dataTables_wrapper {
+            font-family: Lato;
+            font-size: 11px;
+            text-align: center;
+
+        {#direction: rtl;#}{#position: relative;#}{#clear: both;#}{#*zoom: 1;#}{#zoom: 1;#}
+        }
+
+        table.dataTable thead tr {
+            background-color: darkgray;
+            border: 1px;
+        }
+
+        th {
+            border-top: 1px solid #dddddd;
+            border-bottom: 1px solid #dddddd;
+            border-right: 1px solid #dddddd;
+        }
+
+        th:first-child {
+            border-left: 1px solid #dddddd;
+        }
+
+        .DTFC_LeftBodyWrapper {
+            z-index: 999999999 !important;
+        }
+
+        .dataTables_scroll {
+            overflow: auto;
+            position: relative;
+        }
+
+        .normal {
+            max-width: 50em
+        }
+
+        h1 {
+            font-family: Lato;
+            font-size: 30px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 700;
+            line-height: 1.2em;
+        }
+
+        h2 {
+            font-family: Lato;
+            font-size: 24px;
+            font-style: black;
+            font-variant: black;
+            font-weight: 700;
+            line-height: 15.4px;
+        }
+
+        h3 {
+            font-family: Lato;
+            font-size: 20px;
+            font-style: black;
+            font-variant: black;
+            font-weight: 1200;
+            line-height: 15.4px;
+        }
+
+        h4 {
+            font-family: Lato;
+            font-size: 16px;
+            font-style: black;
+            font-variant: black;
+            font-weight: 1200;
+            line-height: 15.4px;
+        }
+
+        p {
+            font-family: Lato;
+            font-size: 14px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 400;
+            line-height: 20px;
+        }
+
+        button {
+            font-family: Lato;
+            font-size: 14px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 400;
+            line-height: 20px;
+        }
+
+        .email {
+            font-family: Lato;
+            font-size: 14px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 400;
+            line-height: 20px;
+        }
+
+        blockquote {
+            font-family: Lato;
+            font-size: 21px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 400;
+            line-height: 30px;
+        }
+
+        pre {
+            font-family: Lato;
+            font-size: 13px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 400;
+            line-height: 18.5714px;
+        }
+    </style>
+
+</head>
+
+<body class="body">
+{#<body class="body"><p style="margin: 1em;">#}
+{#    <i> C. elegans</i> single cell differential expression.#}
+{#    Brought to you by <a href="https://wormbase.org">WormBase</a>.#}
+{#    Powered by#}
+{#    <a href="https://github.com/YosefLab/scVI/issues"> scVI </a>#}
+{#    <br> <br> <br>#}
+{#</p>#}
+{#<body>#}
+
+<div class="container-fluid" style="min-height:80%; margin-left: 2em" style="width: 80%px;">
+
+    {% block body %}{% endblock %}
+
+</div>
+
+</body>
+</html>
+
