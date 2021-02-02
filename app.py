@@ -73,14 +73,15 @@ columns = [{"data": item, "title": item} for item in df_nice_names.columns]
 #### datatables to render the selection tables ####
 @tables.route("/", methods=['GET'])
 def clientside_table_content():
+    # this creates the table that goes in the home page
     return jsonify({'data': dict_df, 'columns': columns})
 
 app.register_blueprint(tables)
 
 # this is the landing page
 @app.route("/")
-def clientside_table():
-    return render_template("clientside_table.html")
+def home():
+    return render_template("home.html")
 
 @app.route("/results")
 def results():

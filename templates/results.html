@@ -1,26 +1,31 @@
-<style>
-  @import url('https://fonts.googleapis.com/css?family=Lato');
-</style>
-<title> 🌋 Results 💥 </title>
+{% extends "template.html" %}
+{% block title %}
 
+    <title> 🌋 results 💥 </title>
+
+{% endblock %}
+{% block body %}
 
 <div class="normal">
     <div>
-        <h2 style="font-family: Lato"> Differential Expression Results  (takes a moment to load)</h1>
-        <p style="font-family: Lato">
+        <h2> Differential Expression Results  (takes a moment to load)</h1>
+        <p>
             <ul>
-                <li style="font-family: Lato"> <a href="/get_results_csv"> Download a csv file with all DE results.</a> <br> </li>
-                <li style="font-family: Lato"> <a href="/get_groups_csv"> Download a csv file of the cell types and experiments in each group.</a><br> </li>
-                <li style="font-family: Lato"> <a href="/get_plot"> Download this plot.</a> <br></li>
-                <li style="font-family: Lato"> <a href="/"> Run another rest.</a><br> </li>
+                <li> <a href="/get_results_csv"> Download a csv file with all DE results.</a> <br> </li>
+                <li> <a href="/get_groups_csv"> Download a csv file of the cell types and experiments in each group.</a><br> </li>
+                <li> <a href="/get_plot"> Download this plot.</a> <br></li>
+                <li> <a href="/"> Run another rest.</a><br> </li>
             </ul>
         </p>
-        
+
     </div>
 
-    <div>
-        <iframe id="igraph" scrolling="no" style="border:none;" 
-        seamless="seamless" src="/static/fig.html" 
+    <div style="height:60em; width:80em">
+        <iframe id="igraph" scrolling="no" style="border:none;"
+        seamless="seamless" src="/static/fig.html"
         height="80%" width="100%"></iframe>'
     </div>
 </div>
+
+
+{% endblock %}
