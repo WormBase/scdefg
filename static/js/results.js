@@ -27,23 +27,23 @@ $(document).ready(function () {
                 items: 'cell',
                 selector: 'td:not(:first-child)'
             },
-            "columnDefs": [
-                {"width": "20em", "targets": 0}
-            ],
+            // "columnDefs": [
+            //     {"width": "50%", "targets": 0}
+            // ],
         });
     });
 
 
-    $.get('/tables/', function (data) {
+    $.get('/selection_results_tables/', function (data) {
         table2 = $('#SELECTED_GROUPS_TABLE').DataTable({
             data: data.data,
             "paging": true,
             "ordering": true,
             "info": true,
             "searching": false,
-            "pageLength": 20,
+            "pageLength": 25,
             dom: 'frtip',
-            scrollY: "50em",
+            scrollY: "70em",
             scrollX: true,
             scrollCollapse: true,
             fixedColumns: {
@@ -56,9 +56,9 @@ $(document).ready(function () {
                 items: 'cell',
                 selector: 'td:not(:first-child)'
             },
-            "columnDefs": [
-                {"width": "20em", "targets": 0}
-            ],
+            // "columnDefs": [
+            //     {"width": "20em", "targets": 0}
+            // ],
         });
     });
 
