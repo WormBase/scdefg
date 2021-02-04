@@ -4,7 +4,7 @@ var table1
 var table2
 
 $(document).ready(function () {
-    $.get('/tables/', function (data) {
+    $.get('/de_results_tables/', function (data) {
         table1 = $('#DE_RESULTS_TABLE').DataTable({
             data: data.data,
             "paging": true,
@@ -13,9 +13,7 @@ $(document).ready(function () {
             "searching": true,
             "pageLength": 25,
             dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ],
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
             scrollY: "70em",
             scrollX: true,
             scrollCollapse: true,
