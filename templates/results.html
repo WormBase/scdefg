@@ -1,29 +1,77 @@
 {% extends "template.html" %}
 {% block title %}
 
-    <title> 🌋 results 💥 </title>
+<title> 🌋 results 💥 </title>
 
 {% endblock %}
 {% block body %}
 
-<div class="normal">
-    <div>
-        <h2> Differential Expression Results  (takes a moment to load)</h1>
-        <p>
-            <ul>
-                <li> <a href="/get_results_csv"> Download a csv file with all DE results.</a> <br> </li>
-                <li> <a href="/get_groups_csv"> Download a csv file of the cell types and experiments in each group.</a><br> </li>
-                <li> <a href="/get_plot"> Download this plot.</a> <br></li>
-                <li> <a href="/"> Run another rest.</a><br> </li>
-            </ul>
-        </p>
+<script type="text/javascript" src="/static/js/results.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+<script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+<script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 
-    </div>
+<script type="text/javascript"
+        src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+
+
+
+
+<div>
+    <h2> Differential Expression Results (takes a moment to load)</h2>
+    <p>
+    <ul>
+        <li><a href="/get_results_csv"> Download a csv file with all DE results.</a> <br></li>
+        <li><a href="/get_groups_csv"> Download a csv file of the cell types and experiments in each
+            group.</a><br></li>
+        <li><a href="/get_plot"> Download this plot.</a> <br></li>
+        <li><a href="/"> Run another rest.</a><br></li>
+    </ul>
+    </p>
+
 
     <div style="height:60em; width:80em">
         <iframe id="igraph" scrolling="no" style="border:none;"
-        seamless="seamless" src="/static/fig.html"
-        height="80%" width="100%"></iframe>'
+                seamless="seamless" src="/static/fig.html"
+                height="80%" width="100%"></iframe>
+    </div>
+
+</div>
+<div>
+
+    <h2><br>DE results</h2>
+    <div class="table_container">
+        <table id="DE_RESULTS_TABLE" cellspacing="0" class="cell-border stripe display compact"
+               style="border-bottom: none; " width="100%"></table>
+    </div>
+    <h2><br> Selected cells</h2>
+    </h2>
+
+    <div class="table_container">
+        <table id="SELECTED_GROUPS_TABLE" cellspacing="0" class="cell-border stripe display compact"
+               style="border-bottom: none; " width="100%"></table>
     </div>
 </div>
 
