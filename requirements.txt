@@ -1,0 +1,4 @@
+scvi-tools==0.8.1
+Flask==1.1.2
+Flask-Misaka==1.0.0
+plotly==4.14.3
