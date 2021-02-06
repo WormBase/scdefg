@@ -11,7 +11,6 @@ import json
 import time
 from io import StringIO
 import urllib
-from flask_misaka import Misaka
 import anndata
 import scvi
 import numpy as np
@@ -29,7 +28,6 @@ app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-Misaka(app, math_explicit = True)
 tables = Blueprint('tables', __name__, url_prefix='/tables')
 de_results_tables = Blueprint('de_results_tables', __name__, url_prefix='/de_results_tables')
 selection_results_tables = Blueprint('selection_results_tables', __name__, url_prefix='/selection_results_tables')
