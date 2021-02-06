@@ -6,17 +6,13 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 from flask import Flask, Response, jsonify, request, render_template, Blueprint, send_file, redirect, url_for
 import logging
 import pandas as pd
-import sys
 import json
-import time
 from io import StringIO
-import urllib
-import anndata
 import scvi
 import numpy as np
-from tqdm import tqdm
 import plotly.graph_objects as go
 import time
+
 print('scvi-tools version:', scvi.__version__)
 
 
