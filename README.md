@@ -11,7 +11,7 @@ the two lines below will download the taylor model and rename the folder to be c
 ```
 wget -q -O tmp.zip https://github.com/Munfred/scvi-de-flask/releases/download/taylor2020/taylor2020_100955cells_11569genes_20210129_scvi.zip && unzip tmp.zip && rm tmp.zip
 
-mv taylor2020_100955cells_11569genes_20210129_scvi movel
+mv taylor2020_100955cells_11569genes_20210129_scvi model
 ```
 
 https://github.com/Munfred/scvi-de-flask/releases
