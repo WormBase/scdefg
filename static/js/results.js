@@ -8,10 +8,12 @@ $(document).ready(function () {
         table1 = $('#DE_RESULTS_TABLE').DataTable({
             data: data.data,
             "paging": true,
-            "ordering": true,
+            // "ordering": true,
             "info": true,
             "searching": true,
             "pageLength": 25,
+            "processing": true,
+            // "ajax": {"type": "POST", "/de_results_tables"},
             dom: 'Bfrtip',
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
             scrollY: "70em",
@@ -38,7 +40,7 @@ $(document).ready(function () {
         table2 = $('#SELECTED_GROUPS_TABLE').DataTable({
             data: data.data,
             "paging": true,
-            "ordering": true,
+            // "ordering": true,
             "info": true,
             "searching": false,
             "pageLength": 25,
