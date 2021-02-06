@@ -20,3 +20,10 @@ https://github.com/Munfred/scvi-de-flask/releases
 **Note on loading other adata files**
 
 At the moment the code relies on the specific names of the adata.obs for cells and experiments, which here are `cell_type` and `experiment_code` so if the new model adata file you load has different column names, you'll need to change the code to match
+
+
+## TODOS:
+- Fix the DE results table, which currently breaks with more than ~2000 entries. Something to do with datatables...
+- Make the results page tables show up side by side
+- Add "loading" page while ressults are processing (5-10s) - flask currently redirects immediately for some reason, and it will break it nothing has been computed, or load the old results
+- Figure if the p-values can be a little finer to avoid discretization on the volcano plot...
