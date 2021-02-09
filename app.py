@@ -25,7 +25,7 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 tables = Blueprint('tables', __name__, url_prefix='/tables')
-de_enriched_tables = Blueprint('de_enriched_tables', __name__, url_prefix='/de_enriched_tables')
+de_tables = Blueprint('de_tables', __name__, url_prefix='/de_tables')
 de_depleted_tables = Blueprint('de_depleted_tables', __name__, url_prefix='/de_depleted_tables')
 
 ############################ SCVI AND PANDAS PREP ##############################
@@ -60,7 +60,6 @@ df_nice_names.columns = df_nice_names.columns.str.replace('_',' ')
 df_nice_names.columns = df_nice_names.columns.str.replace('-','&#8209;')
 
 # convert df to dict for sending as json to datatables, replace underscore with space for aesthetics
-
 dict_df = df_nice_names.replace('_',' ', regex=True).to_dict(orient='records')
 # convert column names into dict for sending as json to datatables
 columns = [{"data": item, "title": item} for item in df_nice_names.columns]
@@ -73,8 +72,8 @@ app.register_blueprint(tables)
 
 
 #### datatables to render the DE results table ####
-@de_enriched_tables.route("/", methods=['GET','POST'])
-def de_enriched_table_content():
+@de_tables.route("/", methods=['GET','POST'])
+def de_table_content():
     # convert df to dict for sending as json to datatables
     de_df=pd.read_csv('results.csv', index_col=0).reset_index()
 
@@ -86,26 +85,7 @@ def de_enriched_table_content():
     # convert column names into dict for sending as json to datatables
     columns = [{"data": item, "title": item} for item in de_df.columns]
     return jsonify({'data': de_dict_df, 'columns': columns})
-app.register_blueprint(de_enriched_tables)
-
-#### datatables to render the DE results DEPLEPTED table ####
-@de_depleted_tables.route("/", methods=['GET','POST'])
-def de_depleted_table_content():
-    # convert df to dict for sending as json to datatables
-    de_df=pd.read_csv('results.csv', index_col=0).reset_index()
-
-    de_df=de_df[['index','gene_name','minuslog10pval','lfc_mean']].fillna('-')
-    de_df.columns=['Gene ID', 'Gene Name', '-log10 p-value','mean log2 fold change' ]
-    de_df = de_df.copy()
-    # convert df to dict for sending as json to datatables
-    de_dict_df = de_df.to_dict(orient='records')
-    # convert column names into dict for sending as json to datatables
-    columns = [{"data": item, "title": item} for item in de_df.columns]
-    return jsonify({'data': de_dict_df, 'columns': columns})
-app.register_blueprint(de_depleted_tables)
-
-
-
+app.register_blueprint(de_tables)
 
 # this is the landing page
 @app.route("/", methods=['GET', 'POST'])
@@ -262,20 +242,6 @@ def receive_submission():
 
 
     return redirect(url_for('results'))
-
-@app.route("/get_results_csv")
-def get_results_csv():
-    with open("results.csv") as fp:
-        csv = fp.read()
-    return Response( csv, mimetype="text/csv",
-        headers={"Content-disposition":"attachment; filename=DE_results.csv"})
-
-@app.route("/get_groups_csv")
-def get_groups_csv():
-    with open("selected_groups.csv") as fp:
-        csv = fp.read()
-    return Response( csv, mimetype="text/csv",
-        headers={"Content-disposition":"attachment; filename=selected_groups.csv"})
 
 @app.route("/get_plot")
 def get_plot():

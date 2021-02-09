@@ -4,7 +4,7 @@ var table1
 var table2
 
 $(document).ready(function () {
-    $.get('/de_enriched_tables/', function (data) {
+    $.get('/de_tables/', function (data) {
         table1 = $('#DE_ENRICHED_TABLE').DataTable({
             data: data.data,
             "paging": false,
@@ -24,7 +24,7 @@ $(document).ready(function () {
     });
 
 
-    $.get('/de_depleted_tables/', function (data) {
+    $.get('/de_tables/', function (data) {
         table2 = $('#DE_DEPLETED_TABLE').DataTable({
             data: data.data,
             "paging": false,
