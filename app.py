@@ -204,6 +204,18 @@ def receive_submission():
     for partial_string in genes_df['selected_genes'].values:
         de['color'][de['gene_name'].str.contains(partial_string)] = 'red'
 
+
+    group1_str = ''
+    for cell1 in group1.cell_type1.values:
+        if group1_str != '':  group1_str = group1_str + ', '
+        group1_str = group1_str + str(cell1)
+    print(group1_str)
+
+    group2_str = ''
+    for cell2 in group2.cell_type2.values:
+        if group2_str != '':  group2_str = group2_str + ', '
+        group2_str = group2_str + str(cell2)
+    print(group2_str)
 #### This makes the volcano plot using plotly
     fig = go.Figure(
                     data=go.Scatter(
@@ -223,7 +235,7 @@ def receive_submission():
                             )
                             , layout= {
                                     "title": {"text":
-                                            "Differential expression on group 1 and group 2 <br> Dashes mark p = 0.01"
+                                            group1_str + ' cells versus  <br>' + group2_str + " <br> differential expression results, (dashes mark p = 0.01)"
                                             , 'x':0.5
                                             }
                                     , 'xaxis': {'title': {"text": "Mean log fold change"}}
