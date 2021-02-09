@@ -13,7 +13,7 @@ $(document).ready(function () {
             "searching": false,
             "pageLength": 25,
             dom: 'frtip',
-            scrollY: "50em",
+            scrollY: "30em",
             scrollX: true,
             scrollCollapse: true,
             fixedColumns: {
@@ -42,7 +42,7 @@ $(document).ready(function () {
             "searching": false,
             "pageLength": 25,
             dom: 'frtip',
-            scrollY: "50em",
+            scrollY: "30em",
             scrollX: true,
             scrollCollapse: true,
             fixedColumns: {

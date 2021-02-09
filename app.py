@@ -46,7 +46,7 @@ adata = model.adata.copy()
 experiments= np.sort(adata.obs['experiment_code'].unique())
 unique_cell_types=np.sort(adata.obs['cell_type'].unique())
 census=pd.DataFrame(index= unique_cell_types)
-census.ct = unique_cell_types
+# census['ct'] = unique_cell_types
 # for experiment in experiments:
 #     census[experiment] = census.index.map(adata.obs[adata.obs['experiment_code']==experiment]['cell_type'].value_counts())
 census.index=census.index.rename('Cell Type')
@@ -59,8 +59,9 @@ df_nice_names = census.copy()
 df_nice_names.columns = df_nice_names.columns.str.replace('_',' ')
 df_nice_names.columns = df_nice_names.columns.str.replace('-','&#8209;')
 
-# convert df to dict for sending as json to datatables
-dict_df = df_nice_names.to_dict(orient='records')
+# convert df to dict for sending as json to datatables, replace underscore with space for aesthetics
+
+dict_df = df_nice_names.replace('_',' ', regex=True).to_dict(orient='records')
 # convert column names into dict for sending as json to datatables
 columns = [{"data": item, "title": item} for item in df_nice_names.columns]
 
