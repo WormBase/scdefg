@@ -263,20 +263,6 @@ def receive_submission():
 
     return redirect(url_for('results'))
 
-@app.route("/get_results_csv")
-def get_results_csv():
-    with open("results.csv") as fp:
-        csv = fp.read()
-    return Response( csv, mimetype="text/csv",
-        headers={"Content-disposition":"attachment; filename=DE_results.csv"})
-
-@app.route("/get_groups_csv")
-def get_groups_csv():
-    with open("selected_groups.csv") as fp:
-        csv = fp.read()
-    return Response( csv, mimetype="text/csv",
-        headers={"Content-disposition":"attachment; filename=selected_groups.csv"})
-
 @app.route("/get_plot")
 def get_plot():
     with open("./static/fig.html") as fp:
