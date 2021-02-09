@@ -45,12 +45,11 @@ adata = model.adata.copy()
 # if interested in selecting using another parameter (eg 'patient') change the 'experiment_code' string to match
 experiments= np.sort(adata.obs['experiment_code'].unique())
 unique_cell_types=np.sort(adata.obs['cell_type'].unique())
-census=pd.DataFrame(np.nan, index= unique_cell_types, columns=experiments)
-for experiment in experiments:
-    census[experiment] = census.index.map(adata.obs[adata.obs['experiment_code']==experiment]['cell_type'].value_counts())
+census=pd.DataFrame(index= unique_cell_types)
+census.ct = unique_cell_types
+# for experiment in experiments:
+#     census[experiment] = census.index.map(adata.obs[adata.obs['experiment_code']==experiment]['cell_type'].value_counts())
 census.index=census.index.rename('Cell Type')
-# to render the table titles better we replace underscores with spaces,
-# and use non breaking hyphens (&#8209;)
 
 
 # the index of the dataframe is ignored when rendering the tables,
@@ -85,6 +84,7 @@ def de_clientside_table_content():
     de_dict_df = de_df.to_dict(orient='records')
     # convert column names into dict for sending as json to datatables
     columns = [{"data": item, "title": item} for item in de_df.columns]
+    columns = ['wagawaga']
     return jsonify({'data': de_dict_df, 'columns': columns})
 app.register_blueprint(de_results_tables)
 
@@ -101,7 +101,7 @@ def selection_clientside_table_content():
     selection_dict_df = selection_df_nice_names.to_dict(orient='records')
     # convert column names into dict for sending as json to datatables
     columns = [{"data": item, "title": item} for item in selection_df_nice_names.columns]
-
+    columns=['wagawaga']
     return jsonify({'data': selection_dict_df, 'columns': columns})
 
 app.register_blueprint(selection_results_tables)
@@ -130,14 +130,16 @@ def receive_submission():
     data2 = json.loads(answer['data2'][0])
     data2_df = pd.DataFrame.from_dict(data2[0])
 
+    print(data1)
+    print(data1_df)
+
     # now map the index number to experiment name and cell type name
     group1 = pd.DataFrame()
     group1['cell_type1'] = data1_df['row'].map(census['Cell Type'])
-    group1['experiment1'] = data1_df['column'].map(pd.Series(census.columns.values))
+    print(group1)
 
     group2 = pd.DataFrame()
     group2['cell_type2'] = data2_df['row'].map(census['Cell Type'])
-    group2['experiment2'] = data2_df['column'].map(pd.Series(census.columns.values))
 
     genes = StringIO(json.loads(answer['genes'][0]))
     genes_df = pd.read_csv(genes, names=['selected_genes'])
@@ -146,7 +148,7 @@ def receive_submission():
     selected_groups_df.to_csv('selected_groups.csv')
 
 
-#### Creates the masks for the selected cell groups
+#### Creates the masks for the selected cell types
 
     # first create the mask as an array of all false
     # then for each group in the data add them to the mask

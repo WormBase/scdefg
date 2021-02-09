@@ -24,7 +24,7 @@ $(document).ready(function () {
             select: {
                 style: 'multi+shift',
                 items: 'cell',
-                selector: 'td:not(:first-child)'
+                // selector: 'td:not(:first-child)'
             },
             "columnDefs": [
                 {"width": "20em", "targets": 0}
@@ -53,7 +53,7 @@ $(document).ready(function () {
             select: {
                 style: 'multi+shift',
                 items: 'cell',
-                selector: 'td:not(:first-child)'
+                // selector: 'td:not(:first-child)'
             },
             "columnDefs": [
                 {"width": "20em", "targets": 0}
