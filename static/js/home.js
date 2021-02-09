@@ -13,7 +13,7 @@ $(document).ready(function () {
             "searching": false,
             "pageLength": 25,
             dom: 'frtip',
-            scrollY: "50em",
+            scrollY: "30em",
             scrollX: true,
             scrollCollapse: true,
             fixedColumns: {
@@ -24,7 +24,7 @@ $(document).ready(function () {
             select: {
                 style: 'multi+shift',
                 items: 'cell',
-                selector: 'td:not(:first-child)'
+                // selector: 'td:not(:first-child)'
             },
             "columnDefs": [
                 {"width": "20em", "targets": 0}
@@ -42,7 +42,7 @@ $(document).ready(function () {
             "searching": false,
             "pageLength": 25,
             dom: 'frtip',
-            scrollY: "50em",
+            scrollY: "30em",
             scrollX: true,
             scrollCollapse: true,
             fixedColumns: {
@@ -53,7 +53,7 @@ $(document).ready(function () {
             select: {
                 style: 'multi+shift',
                 items: 'cell',
-                selector: 'td:not(:first-child)'
+                // selector: 'td:not(:first-child)'
             },
             "columnDefs": [
                 {"width": "20em", "targets": 0}

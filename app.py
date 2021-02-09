@@ -25,8 +25,8 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 tables = Blueprint('tables', __name__, url_prefix='/tables')
-de_results_tables = Blueprint('de_results_tables', __name__, url_prefix='/de_results_tables')
-selection_results_tables = Blueprint('selection_results_tables', __name__, url_prefix='/selection_results_tables')
+de_enriched_tables = Blueprint('de_enriched_tables', __name__, url_prefix='/de_enriched_tables')
+de_depleted_tables = Blueprint('de_depleted_tables', __name__, url_prefix='/de_depleted_tables')
 
 ############################ SCVI AND PANDAS PREP ##############################
 # this will load the pretrained model
@@ -45,12 +45,11 @@ adata = model.adata.copy()
 # if interested in selecting using another parameter (eg 'patient') change the 'experiment_code' string to match
 experiments= np.sort(adata.obs['experiment_code'].unique())
 unique_cell_types=np.sort(adata.obs['cell_type'].unique())
-census=pd.DataFrame(np.nan, index= unique_cell_types, columns=experiments)
-for experiment in experiments:
-    census[experiment] = census.index.map(adata.obs[adata.obs['experiment_code']==experiment]['cell_type'].value_counts())
+census=pd.DataFrame(index= unique_cell_types)
+# census['ct'] = unique_cell_types
+# for experiment in experiments:
+#     census[experiment] = census.index.map(adata.obs[adata.obs['experiment_code']==experiment]['cell_type'].value_counts())
 census.index=census.index.rename('Cell Type')
-# to render the table titles better we replace underscores with spaces,
-# and use non breaking hyphens (&#8209;)
 
 
 # the index of the dataframe is ignored when rendering the tables,
@@ -60,8 +59,9 @@ df_nice_names = census.copy()
 df_nice_names.columns = df_nice_names.columns.str.replace('_',' ')
 df_nice_names.columns = df_nice_names.columns.str.replace('-','&#8209;')
 
-# convert df to dict for sending as json to datatables
-dict_df = df_nice_names.to_dict(orient='records')
+# convert df to dict for sending as json to datatables, replace underscore with space for aesthetics
+
+dict_df = df_nice_names.replace('_',' ', regex=True).to_dict(orient='records')
 # convert column names into dict for sending as json to datatables
 columns = [{"data": item, "title": item} for item in df_nice_names.columns]
 
@@ -73,8 +73,8 @@ app.register_blueprint(tables)
 
 
 #### datatables to render the DE results table ####
-@de_results_tables.route("/", methods=['GET','POST'])
-def de_clientside_table_content():
+@de_enriched_tables.route("/", methods=['GET','POST'])
+def de_enriched_table_content():
     # convert df to dict for sending as json to datatables
     de_df=pd.read_csv('results.csv', index_col=0).reset_index()
 
@@ -86,25 +86,25 @@ def de_clientside_table_content():
     # convert column names into dict for sending as json to datatables
     columns = [{"data": item, "title": item} for item in de_df.columns]
     return jsonify({'data': de_dict_df, 'columns': columns})
-app.register_blueprint(de_results_tables)
+app.register_blueprint(de_enriched_tables)
 
+#### datatables to render the DE results DEPLEPTED table ####
+@de_depleted_tables.route("/", methods=['GET','POST'])
+def de_depleted_table_content():
+    # convert df to dict for sending as json to datatables
+    de_df=pd.read_csv('results.csv', index_col=0).reset_index()
 
-#### datatables to render the selected cells in the results page ####
-@selection_results_tables.route("/", methods=['GET', 'POST'])
-def selection_clientside_table_content():
+    de_df=de_df[['index','gene_name','minuslog10pval','lfc_mean']].fillna('-')
+    de_df.columns=['Gene ID', 'Gene Name', '-log10 p-value','mean log2 fold change' ]
+    de_df = de_df.copy()
     # convert df to dict for sending as json to datatables
-    selection_df_nice_names=pd.read_csv('selected_groups.csv', index_col=0).fillna('-')
-    print(selection_df_nice_names.head())
-    selection_df_nice_names.columns=['Group 1 cell types', ' Group 1 experiment',
-                                     'Group 2 cell types', ' Group 2 experiment', 'Highlighted Genes']
-    # convert df to dict for sending as json to datatables
-    selection_dict_df = selection_df_nice_names.to_dict(orient='records')
+    de_dict_df = de_df.to_dict(orient='records')
     # convert column names into dict for sending as json to datatables
-    columns = [{"data": item, "title": item} for item in selection_df_nice_names.columns]
+    columns = [{"data": item, "title": item} for item in de_df.columns]
+    return jsonify({'data': de_dict_df, 'columns': columns})
+app.register_blueprint(de_depleted_tables)
 
-    return jsonify({'data': selection_dict_df, 'columns': columns})
 
-app.register_blueprint(selection_results_tables)
 
 
 # this is the landing page
@@ -130,14 +130,16 @@ def receive_submission():
     data2 = json.loads(answer['data2'][0])
     data2_df = pd.DataFrame.from_dict(data2[0])
 
+    print(data1)
+    print(data1_df)
+
     # now map the index number to experiment name and cell type name
     group1 = pd.DataFrame()
     group1['cell_type1'] = data1_df['row'].map(census['Cell Type'])
-    group1['experiment1'] = data1_df['column'].map(pd.Series(census.columns.values))
+    print(group1)
 
     group2 = pd.DataFrame()
     group2['cell_type2'] = data2_df['row'].map(census['Cell Type'])
-    group2['experiment2'] = data2_df['column'].map(pd.Series(census.columns.values))
 
     genes = StringIO(json.loads(answer['genes'][0]))
     genes_df = pd.read_csv(genes, names=['selected_genes'])
@@ -146,18 +148,18 @@ def receive_submission():
     selected_groups_df.to_csv('selected_groups.csv')
 
 
-#### Creates the masks for the selected cell groups
+#### Creates the masks for the selected cell types
 
     # first create the mask as an array of all false
     # then for each group in the data add them to the mask
-    group1_mask = adata.obs['experiment_code'] != adata.obs['experiment_code']
+    group1_mask = adata.obs.index != adata.obs.index
     for idx, row in group1.iterrows():
-        mask = (adata.obs['experiment_code']==row['experiment1']) & (adata.obs['cell_type']==row['cell_type1'])
+        mask = adata.obs['cell_type']==row['cell_type1']
         group1_mask = group1_mask | mask
 
-    group2_mask = adata.obs['experiment_code'] != adata.obs['experiment_code']
+    group2_mask = adata.obs.index != adata.obs.index
     for idx, row in group2.iterrows():
-        mask = (adata.obs['experiment_code']==row['experiment2']) & (adata.obs['cell_type']==row['cell_type2'])
+        mask = adata.obs['cell_type']==row['cell_type2']
         group2_mask = group2_mask | mask
 
     # the masks then define the two groups of cells on which to perform DE
@@ -203,6 +205,18 @@ def receive_submission():
     for partial_string in genes_df['selected_genes'].values:
         de['color'][de['gene_name'].str.contains(partial_string)] = 'red'
 
+
+    group1_str = ''
+    for cell1 in group1.cell_type1.values:
+        if group1_str != '':  group1_str = group1_str + ', '
+        group1_str = group1_str + str(cell1)
+    print(group1_str)
+
+    group2_str = ''
+    for cell2 in group2.cell_type2.values:
+        if group2_str != '':  group2_str = group2_str + ', '
+        group2_str = group2_str + str(cell2)
+    print(group2_str)
 #### This makes the volcano plot using plotly
     fig = go.Figure(
                     data=go.Scatter(
@@ -222,7 +236,7 @@ def receive_submission():
                             )
                             , layout= {
                                     "title": {"text":
-                                            "Differential expression on group 1 and group 2 <br> Dashes mark p = 0.01"
+                                            group1_str + ' cells versus  <br>' + group2_str + " <br> differential expression results, (dashes mark p = 0.01)"
                                             , 'x':0.5
                                             }
                                     , 'xaxis': {'title': {"text": "Mean log fold change"}}

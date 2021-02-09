@@ -4,63 +4,42 @@ var table1
 var table2
 
 $(document).ready(function () {
-    $.get('/de_results_tables/', function (data) {
-        table1 = $('#DE_RESULTS_TABLE').DataTable({
+    $.get('/de_enriched_tables/', function (data) {
+        table1 = $('#DE_ENRICHED_TABLE').DataTable({
             data: data.data,
-            "paging": true,
-            // "ordering": true,
+            "paging": false,
+            "ordering": true,
+            "order": [[3, "desc"]],
             "info": true,
             "searching": true,
-            "pageLength": 25,
-            "processing": true,
-            // "ajax": {"type": "POST", "/de_results_tables"},
             dom: 'Bfrtip',
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+            buttons: ['copy', 'csv', 'excel'],
             scrollY: "70em",
-            scrollX: true,
-            scrollCollapse: true,
-            fixedColumns: {
-                leftColumns: 1,
-                rightColumns: 0
-            },
             columns: data.columns,
             select: {
                 style: 'multi+shift',
-                items: 'cell',
-                selector: 'td:not(:first-child)'
-            },
-            // "columnDefs": [
-            //     {"width": "50%", "targets": 0}
-            // ],
+                items: 'cell'
+            }
         });
     });
 
 
-    $.get('/selection_results_tables/', function (data) {
-        table2 = $('#SELECTED_GROUPS_TABLE').DataTable({
+    $.get('/de_depleted_tables/', function (data) {
+        table2 = $('#DE_DEPLETED_TABLE').DataTable({
             data: data.data,
-            "paging": true,
-            // "ordering": true,
+            "paging": false,
+            "ordering": true,
+            "order": [[3, "asc"]],
             "info": true,
-            "searching": false,
-            "pageLength": 25,
-            dom: 'frtip',
+            "searching": true,
+            dom: 'Bfrtip',
+            buttons: ['copy', 'csv', 'excel'],
             scrollY: "70em",
-            scrollX: true,
-            scrollCollapse: true,
-            fixedColumns: {
-                leftColumns: 1,
-                rightColumns: 0
-            },
             columns: data.columns,
             select: {
                 style: 'multi+shift',
-                items: 'cell',
-                selector: 'td:not(:first-child)'
-            },
-            // "columnDefs": [
-            //     {"width": "20em", "targets": 0}
-            // ],
+                items: 'cell'
+            }
         });
     });
 

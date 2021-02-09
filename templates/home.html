@@ -25,54 +25,76 @@
             src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
 
-    <div class="normal">
-        <div>
+    <div>
+    <br>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div>
+                        <div class="normal">
+                            <div>
 
-            <h3> scvi-de-flask: scvi differential expression with a Flask GUI</h3>
-            <p>
-                This app uses <a href="https://scvi-tools.org">scvi-tools</a>. The code for this app and more
-                information is available at
-                <a href="https://github.com/Munfred/scvi-de-flask/">github.com/munfred/scvi-de-flask</a>
-            </p>
-            <p>
-                It allows you to quickly perform differential expression on single cell RNA sequencing data.
-                Just select cell types and experiments to compare and some genes to highlight.
-                It will produce an interactive volcano plot and table with DE results in ~10s.
-            </p>
-        </div>
-        <form>
-            <div>
-                <p>To highlight genes add one gene per line below. Gene names (<samp>bus-1</samp>) or ID are accepted
-                    (<samp>WBGene00018223</samp>) </p>
-                <textarea name="genes" rows="5" cols="30">nlp
-flp
-ins</textarea>
+                                <h3> scvi-de-flask: scvi differential expression with a Flask GUI</h3>
+                                <p>
+                                    This app uses <a href="https://scvi-tools.org">scvi-tools</a>. The code for this app
+                                    and more
+                                    information is available at
+                                    <a href="https://github.com/Munfred/scvi-de-flask/">github.com/munfred/scvi-de-flask</a>
+                                </p>
+                                <p>
+                                    It allows you to quickly perform differential expression on single cell RNA
+                                    sequencing data.
+                                    Just select cell types and experiments to compare and some genes to highlight.
+                                    It will produce an interactive volcano plot and table with DE results in ~10s.
+                                </p>
+                            </div>
+                            <form>
+                                <div>
+                                    <p>To highlight genes add one gene per line below. Gene names (<samp>bus-1</samp>)
+                                        or ID are
+                                        accepted
+                                        (<samp>WBGene00018223</samp>) </p>
+                                    <textarea name="genes" rows="5" cols="30"></textarea>
+                                </div>
+                            </form>
+                            <div>
+                                <br>
+                                <button type="submit" value="Submit" class="btn btn-primary">Submit 💥 📱 🔬
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <h5>Select group 1 cells</h5>
+                    <div class="table_container">
+                        <table id="FIRST_TABLE" cellspacing="0" class="cell-border stripe display compact"
+                               style="border-bottom: none; " width="100%">
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <h5>Select group 2 cells</h5>
+                    <div class="table_container">
+                        <table id="SECOND_TABLE" cellspacing="0" class="cell-border stripe display compact"
+                               style="border-bottom: none; " width="100%"></table>
+                    </div>
+                </div>
             </div>
 
-        </form>
-
-
-        <div>
-            <br>
-            <button type="submit" value="Submit"
-                    style="background: greenyellow; font-size:20px; width: 250px; padding: 14px 40px;">Submit 💥 📱 🔬
-            </button>
         </div>
     </div>
 
+    <div class="container-fluid" id="results-div" style="background-color: lightblue">
+    <h1><br>Results will show up in this div in the single page app</h1>
 
-    <h2><br> Select cells on group 1 <span style="font-size:0.4em">(Hold shift to select a range of cells)</span></h2>
-
-    <div class="table_container">
-        <table id="FIRST_TABLE" cellspacing="0" class="cell-border stripe display compact"
-               style="border-bottom: none; " width="100%"></table>
     </div>
 
-    <h2><br> Select cells on group 2 <span style="font-size:0.4em">(Hold shift to select a range of cells)</span></h2>
-    <div class="table_container">
-        <table id="SECOND_TABLE" cellspacing="0" class="cell-border stripe display compact"
-               style="border-bottom: none; " width="100%"></table>
-    </div>
+
+
+
 {% endblock %}
