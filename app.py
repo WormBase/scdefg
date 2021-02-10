@@ -35,22 +35,11 @@ de_depleted_tables = Blueprint('de_depleted_tables', __name__, url_prefix='/de_d
 model_name='model'
 model = scvi.model.SCVI.load(model_name, use_cuda=False)
 adata = model.adata.copy()
-# our adata has annotations by experiment, by cell type and by tissue
-# we use the experiment code and cell type to generate a dataframe
-# that counts how many cells of each type are present in each experiment
-# this dataframe is needed to create the table that allows the user to select
-# which cells to compare on the app
-# cell type does on the index, experiment on the columns, entries are number of
-# cells of that type per experiment
-# if interested in selecting using another parameter (eg 'patient') change the 'experiment_code' string to match
-experiments= np.sort(adata.obs['experiment_code'].unique())
+
+# create a dataframe with list of cell types to be used for the selection tables
 unique_cell_types=np.sort(adata.obs['cell_type'].unique())
 census=pd.DataFrame(index= unique_cell_types)
-# census['ct'] = unique_cell_types
-# for experiment in experiments:
-#     census[experiment] = census.index.map(adata.obs[adata.obs['experiment_code']==experiment]['cell_type'].value_counts())
 census.index=census.index.rename('Cell Type')
-
 
 # the index of the dataframe is ignored when rendering the tables,
 # so we do reset_index to put the cell names in the first column
@@ -70,31 +59,10 @@ def clientside_table_content():
     return jsonify({'data': dict_df, 'columns': columns})
 app.register_blueprint(tables)
 
-
-#### datatables to render the DE results table ####
-@de_tables.route("/", methods=['GET','POST'])
-def de_table_content():
-    # convert df to dict for sending as json to datatables
-    de_df=pd.read_csv('results.csv', index_col=0).reset_index()
-
-    de_df=de_df[['index','gene_name','minuslog10pval','lfc_mean']].fillna('-')
-    de_df.columns=['Gene ID', 'Gene Name', '-log10 p-value','mean log2 fold change' ]
-    de_df = de_df.copy()
-    # convert df to dict for sending as json to datatables
-    de_dict_df = de_df.to_dict(orient='records')
-    # convert column names into dict for sending as json to datatables
-    columns = [{"data": item, "title": item} for item in de_df.columns]
-    return jsonify({'data': de_dict_df, 'columns': columns})
-app.register_blueprint(de_tables)
-
 # this is the landing page
 @app.route("/", methods=['GET', 'POST'])
 def home():
     return render_template("home.html")
-
-@app.route("/results", methods=['POST', 'GET'])
-def results():
-    return render_template("results.html")
 
 @app.route('/submit', methods=['POST', 'GET'])
 def receive_submission():
@@ -110,23 +78,14 @@ def receive_submission():
     data2 = json.loads(answer['data2'][0])
     data2_df = pd.DataFrame.from_dict(data2[0])
 
-    print(data1)
-    print(data1_df)
-
     # now map the index number to experiment name and cell type name
     group1 = pd.DataFrame()
     group1['cell_type1'] = data1_df['row'].map(census['Cell Type'])
-    print(group1)
-
     group2 = pd.DataFrame()
     group2['cell_type2'] = data2_df['row'].map(census['Cell Type'])
 
     genes = StringIO(json.loads(answer['genes'][0]))
     genes_df = pd.read_csv(genes, names=['selected_genes'])
-
-    selected_groups_df = pd.concat([group1, group2, genes_df], axis=1)
-    selected_groups_df.to_csv('selected_groups.csv')
-
 
 #### Creates the masks for the selected cell types
 
@@ -143,11 +102,9 @@ def receive_submission():
         group2_mask = group2_mask | mask
 
     # the masks then define the two groups of cells on which to perform DE
-    fdr_target=0.005
     de = model.differential_expression( adata,
                                        idx1=group1_mask,
-                                       idx2=group2_mask,
-                                       fdr_target=fdr_target)
+                                       idx2=group2_mask)
 
 #### Wrangles the DE results dataframe a bit
 
@@ -190,13 +147,12 @@ def receive_submission():
     for cell1 in group1.cell_type1.values:
         if group1_str != '':  group1_str = group1_str + ', '
         group1_str = group1_str + str(cell1)
-    print(group1_str)
 
     group2_str = ''
     for cell2 in group2.cell_type2.values:
         if group2_str != '':  group2_str = group2_str + ', '
         group2_str = group2_str + str(cell2)
-    print(group2_str)
+
 #### This makes the volcano plot using plotly
     fig = go.Figure(
                     data=go.Scatter(
@@ -216,12 +172,12 @@ def receive_submission():
                             )
                             , layout= {
                                     "title": {"text":
-                                            group1_str + ' cells versus  <br>' + group2_str + " <br> differential expression results, (dashes mark p = 0.01)"
+                                            group1_str + ' cells versus  <br>' + group2_str + " <br> dashes mark p = 0.01"
                                             , 'x':0.5
                                             }
                                     , 'xaxis': {'title': {"text": "Mean log fold change"}}
                                     , 'yaxis': {'title': {"text": "-log10 p-value"}}
-        #                             , "height": 600,
+                                    , "height": 600,
         #                             , "width":1000
                             }
                 )
@@ -229,26 +185,16 @@ def receive_submission():
     fig.add_shape(type="line", x0=-6, y0=2, x1=6, y1=2, line=dict(color="lightsalmon", width=2, dash="dash"))
 
     # overwrites the last figure in order to serve it in the results page
-    fig.write_html('./static/fig.html')
-    de_csv = de[['gene_name','minuslog10pval','lfc_mean','lfc_std','proba_not_de',
-                 # 'is_de_fdr_'+str(fdr_target)
-                 ]].round(2)
-    de_csv.to_csv('results.csv')
-
-    # if you want to keep all results uncomment the lines below
-    # de_csv.to_csv(timestamp+'results.csv')
-    # fig.write_html( timestamp + '_fig.html')
-    # selected_groups_df.to_csv(timestamp + 'selected_groups.csv')
-
-
-    return redirect(url_for('results'))
-
-@app.route("/get_plot")
-def get_plot():
-    with open("./static/fig.html") as fp:
-        csv = fp.read()
-    return Response( csv, mimetype="text/html",
-        headers={"Content-disposition":"attachment; filename=fig.html"})
+    htmlfig = fig.to_html()
+    de_csv = de[['gene_name','minuslog10pval','lfc_mean','lfc_std','proba_not_de']].round(2)
+    de_df=de_csv.reset_index().round(2)
+    de_df=de_df[['index','gene_name','minuslog10pval','lfc_mean']].fillna('-')
+    de_df.columns=['Gene ID', 'Gene Name', '-log10 p-value','mean log2 fold change' ]
+    # convert df to dict for sending as json to datatables
+    de_dict_df = de_df.to_dict(orient='records')
+    # convert column names into dict for sending as json to datatables
+    columns = [{"data": item, "title": item} for item in de_df.columns]
+    return jsonify({'deplothtml':htmlfig ,'dejsondata':{'data': de_dict_df, 'columns': columns}})
 
 if __name__ == "__main__":
     app.run()
