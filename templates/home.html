@@ -30,8 +30,8 @@
 
 
     <div>
-    <br>
-        <div class="container-fluid">
+        <br>
+        <div class="container-fluid" id="home-div">
             <div class="row">
                 <div class="col-sm-4">
                     <div>
@@ -89,8 +89,37 @@
         </div>
     </div>
 
-    <div class="container-fluid" id="results-div" style="background-color: lightblue">
-    <h1><br>Results will show up in this div in the single page app</h1>
+    <div class="container-fluid" id="results-div">
+        <div>
+            <div id="'de-plot-div">
+                <h3> Differential Expression Results </h3>
+                <div style="height:100%; width:90%" id="plot-display-div"></div>
+            </div>
+            <div class="container-fluid" style="width:90%; height:30em" id="de-results-tables-div">
+                <div class="row">
+                    <div class="col-sm">
+                        <h3>Enriched genes</h3>
+                        <div class="col-sm">
+                            <div class="table_container">
+                                <table id="DE_ENRICHED_TABLE" cellspacing="0" class="cell-border stripe display compact"
+                                       style="border-bottom: none; " width="100%">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <h3>Depleted genes</h3>
+                        <div class="col-sm">
+                            <div class="table_container">
+                                <table id="DE_DEPLETED_TABLE" cellspacing="0" class="cell-border stripe display compact"
+                                       style="border-bottom: none; " width="100%">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 

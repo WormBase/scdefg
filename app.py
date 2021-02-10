@@ -70,31 +70,10 @@ def clientside_table_content():
     return jsonify({'data': dict_df, 'columns': columns})
 app.register_blueprint(tables)
 
-
-#### datatables to render the DE results table ####
-@de_tables.route("/", methods=['GET','POST'])
-def de_table_content():
-    # convert df to dict for sending as json to datatables
-    de_df=pd.read_csv('results.csv', index_col=0).reset_index()
-
-    de_df=de_df[['index','gene_name','minuslog10pval','lfc_mean']].fillna('-')
-    de_df.columns=['Gene ID', 'Gene Name', '-log10 p-value','mean log2 fold change' ]
-    de_df = de_df.copy()
-    # convert df to dict for sending as json to datatables
-    de_dict_df = de_df.to_dict(orient='records')
-    # convert column names into dict for sending as json to datatables
-    columns = [{"data": item, "title": item} for item in de_df.columns]
-    return jsonify({'data': de_dict_df, 'columns': columns})
-app.register_blueprint(de_tables)
-
 # this is the landing page
 @app.route("/", methods=['GET', 'POST'])
 def home():
     return render_template("home.html")
-
-@app.route("/results", methods=['POST', 'GET'])
-def results():
-    return render_template("results.html")
 
 @app.route('/submit', methods=['POST', 'GET'])
 def receive_submission():
@@ -216,12 +195,12 @@ def receive_submission():
                             )
                             , layout= {
                                     "title": {"text":
-                                            group1_str + ' cells versus  <br>' + group2_str + " <br> differential expression results, (dashes mark p = 0.01)"
+                                            group1_str + ' cells versus  <br>' + group2_str + " <br> dashes mark p = 0.01"
                                             , 'x':0.5
                                             }
                                     , 'xaxis': {'title': {"text": "Mean log fold change"}}
                                     , 'yaxis': {'title': {"text": "-log10 p-value"}}
-        #                             , "height": 600,
+                                    , "height": 600,
         #                             , "width":1000
                             }
                 )
@@ -229,26 +208,16 @@ def receive_submission():
     fig.add_shape(type="line", x0=-6, y0=2, x1=6, y1=2, line=dict(color="lightsalmon", width=2, dash="dash"))
 
     # overwrites the last figure in order to serve it in the results page
-    fig.write_html('./static/fig.html')
-    de_csv = de[['gene_name','minuslog10pval','lfc_mean','lfc_std','proba_not_de',
-                 # 'is_de_fdr_'+str(fdr_target)
-                 ]].round(2)
-    de_csv.to_csv('results.csv')
-
-    # if you want to keep all results uncomment the lines below
-    # de_csv.to_csv(timestamp+'results.csv')
-    # fig.write_html( timestamp + '_fig.html')
-    # selected_groups_df.to_csv(timestamp + 'selected_groups.csv')
-
-
-    return redirect(url_for('results'))
-
-@app.route("/get_plot")
-def get_plot():
-    with open("./static/fig.html") as fp:
-        csv = fp.read()
-    return Response( csv, mimetype="text/html",
-        headers={"Content-disposition":"attachment; filename=fig.html"})
+    htmlfig = fig.to_html()
+    de_csv = de[['gene_name','minuslog10pval','lfc_mean','lfc_std','proba_not_de']].round(2)
+    de_df=de_csv.reset_index().round(2)
+    de_df=de_df[['index','gene_name','minuslog10pval','lfc_mean']].fillna('-')
+    de_df.columns=['Gene ID', 'Gene Name', '-log10 p-value','mean log2 fold change' ]
+    # convert df to dict for sending as json to datatables
+    de_dict_df = de_df.to_dict(orient='records')
+    # convert column names into dict for sending as json to datatables
+    columns = [{"data": item, "title": item} for item in de_df.columns]
+    return jsonify({'deplothtml':htmlfig ,'dejsondata':{'data': de_dict_df, 'columns': columns}})
 
 if __name__ == "__main__":
     app.run()

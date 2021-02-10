@@ -4,6 +4,7 @@ var table1
 var table2
 
 $(document).ready(function () {
+    $("#results-div").hide()
     $.get('/tables/', function (data) {
         table1 = $('#FIRST_TABLE').DataTable({
             data: data.data,
@@ -80,20 +81,68 @@ $(document).ready(function () {
         }
 
         if (ncells1 != 0 && ncells2 != 0) {
-            
+
             var confirmation = true;
-            
+
             if (confirmation == true) {
                 json_genes = JSON.stringify(genes);
+                // set the spinner going here
+                // var $this = $(this);
+                // $this.button('loading');
 
                 $.post("/submit", {
                     // "contentType": "application/json",
                     'data1': json1,
                     'data2': json2,
                     'genes': json_genes,
-                });
-                // location.reload();
-                location.replace("/results");
+                })
+                    .done(function (data) {
+                        $("#results-div").show();
+                        // $this.button('reset');
+                        //spinner gets unset here
+
+                        // location.reload();
+                        $("#plot-display-div").html(data.deplothtml)
+
+
+                        table3 = $('#DE_ENRICHED_TABLE').DataTable({
+                            data: data.dejsondata.data,
+                            "paging": false,
+                            "ordering": true,
+                            "order": [[3, "asc"]],
+                            "info": true,
+                            "searching": true,
+                            dom: 'Bfrtip',
+                            buttons: ['copy', 'csv', 'excel'],
+                            scrollY: "70em",
+                            columns: data.dejsondata.columns,
+                            select: {
+                                style: 'multi+shift',
+                                items: 'cell'
+                            }
+                        });
+
+                        table4 = $('#DE_DEPLETED_TABLE').DataTable({
+                            data: data.dejsondata.data,
+                            "paging": false,
+                            "ordering": true,
+                            "order": [[3, "asc"]],
+                            "info": true,
+                            "searching": true,
+                            dom: 'Bfrtip',
+                            buttons: ['copy', 'csv', 'excel'],
+                            scrollY: "70em",
+                            columns: data.dejsondata.columns,
+                            select: {
+                                style: 'multi+shift',
+                                items: 'cell'
+                            }
+                        });
+                    })
+                    .fail(function () {
+                            alert("Something went wrong. Refresh the page and try again. If it keeps happening email eduardo@wormbase.org")
+                        }
+                    );
             }
             alert('You submitted \n ' + ncells1 + ' cells in group 1 and ' + ncells2 + ' cells in group 2. \n ...it will take a few seconds to process');
         }
