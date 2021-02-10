@@ -12,11 +12,11 @@
 
 
 <div class="container-fluid" style="min-height:80%; margin-left: 2em" style="width: 80%px;">
-{% block title %}
+    {% block title %}
 
-    <title> 🌋 scvi-de-flask 💥 </title>
+        <title> 🌋 scvi-de-flask 💥 </title>
 
-{% endblock %}
+    {% endblock %}
 
     <script type="text/javascript" src="/static/js/home.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
@@ -50,18 +50,21 @@
                         <div class="normal">
                             <div>
 
-                                <h3> scvi-de-flask: scvi differential expression with a Flask GUI</h3>
-                                <p>
-                                    This app uses <a href="https://scvi-tools.org">scvi-tools</a>. The code for this app
-                                    and more
-                                    information is available at
-                                    <a href="https://github.com/Munfred/scvi-de-flask/">github.com/munfred/scvi-de-flask</a>
-                                </p>
+                                <h3> Differential expression on CeNGEN C. elegans single cell RNA sequencing data</h3>
+
+
                                 <p>
                                     It allows you to quickly perform differential expression on single cell RNA
-                                    sequencing data.
+                                    sequencing data from the <a href="https://cengen.org">CeNGEN project</a> 2020 data
+                                    release, described in the preprint
+                                    <a href="https://www.biorxiv.org/content/10.1101/2020.12.15.422897v2">
+                                        <i>Molecular topography of an entire nervous system</i></a>.
                                     Just select cell types and experiments to compare and some genes to highlight.
-                                    It will produce an interactive volcano plot and table with DE results in ~10s.
+                                    It will produce an interactive volcano plot and table with DE results in ~15s.
+                                </p>
+                                <p>
+                                    This app uses <a href="https://scvi-tools.org">scvi-tools</a>. The codefor the app is available on
+                                    <a href="https://github.com/Munfred/scvi-de-flask/">GitHub.</a>
                                 </p>
                             </div>
                             <form>
@@ -75,10 +78,18 @@
                             </form>
                             <div>
                                 <br>
-                                <div id="button-div"><button type="submit" value="Submit" class="btn btn-lg btn-primary">Submit 💥 📱 🔬 </button></div>
-                                <div id="spinner-div"><div class="spinner-border"></div> Processing job...takes about 15s </div>
-                                <div id="newjob-div"><input type="button" class="btn-lg btn-primary" onclick="location.href='/';"
-                                                             value="Submit another job (refresh page)" /></div>
+                                <div id="button-div">
+                                    <button type="submit" value="Submit" class="btn btn-lg btn-primary">Submit 💥 📱
+                                        🔬
+                                    </button>
+                                </div>
+                                <div id="spinner-div">
+                                    <div class="spinner-border"></div>
+                                    Processing job...takes about 15s
+                                </div>
+                                <div id="newjob-div"><input type="button" class="btn-lg btn-primary"
+                                                            onclick="location.href='/';"
+                                                            value="Submit another job (refresh page)"/></div>
 
 
                             </div>

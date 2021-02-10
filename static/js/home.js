@@ -27,7 +27,6 @@ $(document).ready(function () {
             select: {
                 style: 'multi+shift',
                 items: 'cell',
-                // selector: 'td:not(:first-child)'
             },
             "columnDefs": [
                 {"width": "20em", "targets": 0}
@@ -56,7 +55,6 @@ $(document).ready(function () {
             select: {
                 style: 'multi+shift',
                 items: 'cell',
-                // selector: 'td:not(:first-child)'
             },
             "columnDefs": [
                 {"width": "20em", "targets": 0}
@@ -88,9 +86,6 @@ $(document).ready(function () {
 
             if (confirmation == true) {
                 json_genes = JSON.stringify(genes);
-                // set the spinner going here
-                // var $this = $(this);
-                // $this.button('loading');
                 $("#button-div").hide();
                 $("#spinner-div").show();
 
@@ -104,14 +99,7 @@ $(document).ready(function () {
                         $("#spinner-div").hide();
                         $("#newjob-div").show();
                         $("#results-div").show();
-
-                        // $this.button('reset');
-                        //spinner gets unset here
-
-                        // location.reload();
                         $("#plot-display-div").html(data.deplothtml)
-
-
                         table3 = $('#DE_ENRICHED_TABLE').DataTable({
                             data: data.dejsondata.data,
                             "paging": false,
@@ -151,7 +139,6 @@ $(document).ready(function () {
                         }
                     );
             }
-            alert('You submitted \n ' + ncells1 + ' cells in group 1 and ' + ncells2 + ' cells in group 2. \n ...it will take a few seconds to process');
         }
         ;
     });
