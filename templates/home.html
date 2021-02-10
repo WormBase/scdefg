@@ -1,10 +1,22 @@
-{% extends "template.html" %}
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato"/>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+
+<body class="body">
+
+
+<div class="container-fluid" style="min-height:80%; margin-left: 2em" style="width: 80%px;">
 {% block title %}
 
     <title> 🌋 scvi-de-flask 💥 </title>
 
 {% endblock %}
-{% block body %}
 
     <script type="text/javascript" src="/static/js/home.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
@@ -63,8 +75,11 @@
                             </form>
                             <div>
                                 <br>
-                                <div id="button-div"><button type="submit" value="Submit" class="btn btn-primary">Submit 💥 📱 🔬 </button></div>
-                                <div class="spinner-border" id="spinner-div"></div>
+                                <div id="button-div"><button type="submit" value="Submit" class="btn btn-lg btn-primary">Submit 💥 📱 🔬 </button></div>
+                                <div id="spinner-div"><div class="spinner-border"></div> Processing job...takes about 15s </div>
+                                <div id="newjob-div"><input type="button" class="btn-lg btn-primary" onclick="location.href='/';"
+                                                             value="Submit another job (refresh page)" /></div>
+
 
                             </div>
                         </div>
@@ -124,7 +139,9 @@
 
     </div>
 
+</div>
+
+</body>
+</html>
 
 
-
-{% endblock %}

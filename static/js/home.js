@@ -6,6 +6,7 @@ var table2
 $(document).ready(function () {
     $("#results-div").hide();
     $("#spinner-div").hide();
+    $("#newjob-div").hide();
     $.get('/tables/', function (data) {
         table1 = $('#FIRST_TABLE').DataTable({
             data: data.data,
@@ -101,6 +102,7 @@ $(document).ready(function () {
                 })
                     .done(function (data) {
                         $("#spinner-div").hide();
+                        $("#newjob-div").show();
                         $("#results-div").show();
 
                         // $this.button('reset');
