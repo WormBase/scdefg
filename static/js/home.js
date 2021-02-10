@@ -4,7 +4,8 @@ var table1
 var table2
 
 $(document).ready(function () {
-    $("#results-div").hide()
+    $("#results-div").hide();
+    $("#spinner-div").hide();
     $.get('/tables/', function (data) {
         table1 = $('#FIRST_TABLE').DataTable({
             data: data.data,
@@ -89,6 +90,8 @@ $(document).ready(function () {
                 // set the spinner going here
                 // var $this = $(this);
                 // $this.button('loading');
+                $("#button-div").hide();
+                $("#spinner-div").show();
 
                 $.post("/submit", {
                     // "contentType": "application/json",
@@ -97,7 +100,9 @@ $(document).ready(function () {
                     'genes': json_genes,
                 })
                     .done(function (data) {
+                        $("#spinner-div").hide();
                         $("#results-div").show();
+
                         // $this.button('reset');
                         //spinner gets unset here
 
