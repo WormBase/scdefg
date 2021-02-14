@@ -18,25 +18,42 @@
 
     {% endblock %}
 
-    <script type="text/javascript" src="/static/js/home.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
-    <script type="text/javascript" charset="utf8"
-            src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
-    <script type="text/javascript" charset="utf8"
-            src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" charset="utf8"
-            src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="/static/js/home.js"></script>
+<!--   NEED TO LOAD JQUERY FIRST OR IT BREAKS -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<!--   needed for basic datatables display  -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 
-    <script type="text/javascript"
-            src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<!--   needed for selection  -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+
+<!--   needed for buttons: csv, copy, excel  -->
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css">
+
+
+
+{#<script type="text/javascript" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>#}
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+
+{#    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>#}
+{#    <script type="text/javascript" charset="utf8"src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>#}
+{#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>#}
+{#    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>#}
+{#    <script type="text/javascript" charset="utf8"#}
+{#            src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>#}
+
+{#    <script type="text/javascript"#}
+{#            src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js"></script>#}
+{#    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>#}
+{#    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>#}
+
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
@@ -54,16 +71,16 @@
 
 
                                 <p>
-                                    It allows you to quickly perform differential expression on single cell RNA
+                                    This app allows you to quickly perform differential expression on single cell RNA
                                     sequencing data from the <a href="https://cengen.org">CeNGEN project</a> 2020 data
                                     release, described in the preprint
                                     <a href="https://www.biorxiv.org/content/10.1101/2020.12.15.422897v2">
                                         <i>Molecular topography of an entire nervous system</i></a>.
                                     Just select cell types and experiments to compare and some genes to highlight.
-                                    It will produce an interactive volcano plot and table with DE results in ~15s.
+                                    It will produce an interactive volcano plot and table with results in ~15s.
                                 </p>
                                 <p>
-                                    This app uses <a href="https://scvi-tools.org">scvi-tools</a>. The codefor the app is available on
+                                    This app uses <a href="https://scvi-tools.org">scvi-tools</a>. The code for the app is available on
                                     <a href="https://github.com/Munfred/scvi-de-flask/">GitHub.</a>
                                 </p>
                             </div>

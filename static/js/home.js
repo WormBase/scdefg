@@ -102,13 +102,27 @@ $(document).ready(function () {
                         $("#plot-display-div").html(data.deplothtml)
                         table3 = $('#DE_ENRICHED_TABLE').DataTable({
                             data: data.dejsondata.data,
-                            "paging": false,
+                            "paging": true,
                             "ordering": true,
-                            "order": [[3, "asc"]],
+                            "lengthMenu": [[100, 250, 500, -1], [100, 250, 500, "All"]],
+                            "order": [[3, "desc"]],
                             "info": true,
                             "searching": true,
-                            dom: 'Bfrtip',
-                            buttons: ['copy', 'csv', 'excel'],
+                            dom: 'Bfrtipl',
+                            buttons: ['csv', 'excel',
+                                {
+                                    extend: 'copyHtml5',
+                                    text: 'Copy all',
+                                },
+                                {
+                                    extend: 'copyHtml5',
+                                    text: 'Copy current page',
+                                    exportOptions: {
+                                        modifier: {
+                                            page: 'current'
+                                        }
+                                    }
+                                }],
                             scrollY: "70em",
                             columns: data.dejsondata.columns,
                             select: {
@@ -119,13 +133,27 @@ $(document).ready(function () {
 
                         table4 = $('#DE_DEPLETED_TABLE').DataTable({
                             data: data.dejsondata.data,
-                            "paging": false,
+                            "paging": true,
                             "ordering": true,
+                            "lengthMenu": [[100, 250, 500, -1], [100, 250, 500, "All"]],
                             "order": [[3, "asc"]],
                             "info": true,
                             "searching": true,
-                            dom: 'Bfrtip',
-                            buttons: ['copy', 'csv', 'excel'],
+                            dom: 'Bfrtipl',
+                            buttons: ['csv', 'excel',
+                                {
+                                    extend: 'copyHtml5',
+                                    text: 'Copy all',
+                                },
+                                {
+                                    extend: 'copyHtml5',
+                                    text: 'Copy current page',
+                                    exportOptions: {
+                                        modifier: {
+                                            page: 'current'
+                                        }
+                                    }
+                                }],
                             scrollY: "70em",
                             columns: data.dejsondata.columns,
                             select: {
@@ -133,6 +161,7 @@ $(document).ready(function () {
                                 items: 'cell'
                             }
                         });
+
                     })
                     .fail(function () {
                             alert("Something went wrong. Refresh the page and try again. If it keeps happening email eduardo@wormbase.org")
