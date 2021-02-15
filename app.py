@@ -186,9 +186,11 @@ def receive_submission():
 
     # overwrites the last figure in order to serve it in the results page
     htmlfig = fig.to_html()
-    de_csv = de[['gene_name','minuslog10pval','lfc_mean','lfc_std','proba_not_de']]
-    de_df=de_csv.reset_index()
-    de_df=de_df[['index','gene_name','minuslog10pval','lfc_mean']].fillna('-')
+    de_df = de[['gene_name','minuslog10pval','lfc_mean','lfc_std','proba_not_de']]
+    print(de_df)
+    de_df.index.rename('gene_id', inplace=True)
+    de_df=de_df.reset_index()
+    de_df=de_df[['gene_id','gene_name','minuslog10pval','lfc_mean']].fillna('-')
     de_df.columns=['Gene ID', 'Gene Name', '-log10 p-value','mean log2 fold change' ]
     de_df['mean log2 fold change']=de_df['mean log2 fold change'].astype(float).round(2)
     de_df['-log10 p-value'] = de_df['-log10 p-value'].astype(float).round(2)
