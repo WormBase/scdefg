@@ -177,7 +177,7 @@ def receive_submission():
                                             }
                                     , 'xaxis': {'title': {"text": "Mean log fold change"}}
                                     , 'yaxis': {'title': {"text": "-log10 p-value"}}
-                                    , "height": 600,
+                                    , "height": 700,
         #                             , "width":1000
                             }
                 )
@@ -190,7 +190,8 @@ def receive_submission():
     de_df=de_csv.reset_index()
     de_df=de_df[['index','gene_name','minuslog10pval','lfc_mean']].fillna('-')
     de_df.columns=['Gene ID', 'Gene Name', '-log10 p-value','mean log2 fold change' ]
-    de_df=de_df.round(2)
+    de_df['mean log2 fold change']=de_df['mean log2 fold change'].astype(float).round(2)
+    de_df['-log10 p-value'] = de_df['-log10 p-value'].astype(float).round(2)
     # convert df to dict for sending as json to datatables
     de_dict_df = de_df.to_dict(orient='records')
     # convert column names into dict for sending as json to datatables
