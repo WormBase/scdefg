@@ -186,15 +186,19 @@ def receive_submission():
 
     # overwrites the last figure in order to serve it in the results page
     htmlfig = fig.to_html()
-    de_csv = de[['gene_name','minuslog10pval','lfc_mean','lfc_std','proba_not_de']].round(2)
-    de_df=de_csv.reset_index().round(2)
+    de_csv = de[['gene_name','minuslog10pval','lfc_mean','lfc_std','proba_not_de']]
+    de_df=de_csv.reset_index()
     de_df=de_df[['index','gene_name','minuslog10pval','lfc_mean']].fillna('-')
     de_df.columns=['Gene ID', 'Gene Name', '-log10 p-value','mean log2 fold change' ]
+    de_df=de_df.round(2)
     # convert df to dict for sending as json to datatables
     de_dict_df = de_df.to_dict(orient='records')
     # convert column names into dict for sending as json to datatables
     columns = [{"data": item, "title": item} for item in de_df.columns]
-    return jsonify({'deplothtml':htmlfig ,'dejsondata':{'data': de_dict_df, 'columns': columns}})
+
+    title = group1_str + ' versus ' + group2_str
+
+    return jsonify({'deplothtml':htmlfig ,'dejsondata':{'data': de_dict_df, 'columns': columns}, 'title':title})
 
 if __name__ == "__main__":
     app.run()

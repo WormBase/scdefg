@@ -109,14 +109,26 @@ $(document).ready(function () {
                             "info": true,
                             "searching": true,
                             dom: 'Bfrtipl',
-                            buttons: ['csv', 'excel',
+                            buttons: [
+                                {
+                                    extend: 'csvHtml5',
+                                    title: data.title,
+                                    text: 'Download csv',
+                                },
+                                {
+                                    extend: 'excelHtml5',
+                                    title: data.title,
+                                    text: 'Download Excel',
+                                },
                                 {
                                     extend: 'copyHtml5',
                                     text: 'Copy all',
+                                    title: data.title,
                                 },
                                 {
                                     extend: 'copyHtml5',
                                     text: 'Copy current page',
+                                    title: data.title,
                                     exportOptions: {
                                         modifier: {
                                             page: 'current'
@@ -125,10 +137,10 @@ $(document).ready(function () {
                                 }],
                             scrollY: "70em",
                             columns: data.dejsondata.columns,
-                            select: {
-                                style: 'multi+shift',
-                                items: 'cell'
-                            }
+                            // select: {
+                            //     style: 'multi+shift',
+                            //     items: 'cell'
+                            // }
                         });
 
                         table4 = $('#DE_DEPLETED_TABLE').DataTable({
@@ -140,14 +152,26 @@ $(document).ready(function () {
                             "info": true,
                             "searching": true,
                             dom: 'Bfrtipl',
-                            buttons: ['csv', 'excel',
+                            buttons: [
+                                {
+                                    extend: 'csvHtml5',
+                                    title: data.title,
+                                    text: 'Download csv',
+                                },
+                                {
+                                    extend: 'excelHtml5',
+                                    title: data.title,
+                                    text: 'Download Excel',
+                                },
                                 {
                                     extend: 'copyHtml5',
                                     text: 'Copy all',
+                                    title: data.title,
                                 },
                                 {
                                     extend: 'copyHtml5',
                                     text: 'Copy current page',
+                                    title: data.title,
                                     exportOptions: {
                                         modifier: {
                                             page: 'current'
@@ -156,10 +180,10 @@ $(document).ready(function () {
                                 }],
                             scrollY: "70em",
                             columns: data.dejsondata.columns,
-                            select: {
-                                style: 'multi+shift',
-                                items: 'cell'
-                            }
+                            // select: {
+                            //     style: 'multi+shift',
+                            //     items: 'cell'
+                            // }
                         });
 
                     })
