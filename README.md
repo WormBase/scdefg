@@ -1,4 +1,4 @@
-# scvi-de-flask
+# scdefg: scvi DE Flask GUI
 This app offer a single page Flask UI that allows you to quickly select cell groups and perform differential expression on single cell RNA sequencing data using [scvi-tools](https://scvi-tools.org)
 
 ## Select some cell types and click submit:
