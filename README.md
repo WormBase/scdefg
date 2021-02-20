@@ -5,9 +5,6 @@ This app offer a single page Flask UI that allows you to quickly select cell gro
 ![](https://user-images.githubusercontent.com/12504176/107468161-44bc3580-6b46-11eb-9175-d10e9749f747.png)
 
 
-
-
-
 ## Results are returned in ~15s with an interactive volcano plot and sortable tables:
 ![](https://user-images.githubusercontent.com/12504176/107468037-07f03e80-6b46-11eb-8b27-9bccc3b5e9a6.png)
 
