@@ -2,14 +2,15 @@
 This app offer a single page Flask UI that allows you to quickly select cell groups and perform differential expression on single cell RNA sequencing data using [scvi-tools](https://scvi-tools.org)
 
 ## Select some cell types and click submit:
-<img width="1094" alt="Screen Shot 2021-02-10 at 02 18 14" src="https://user-images.githubusercontent.com/12504176/107468161-44bc3580-6b46-11eb-9175-d10e9749f747.png">
+![](https://user-images.githubusercontent.com/12504176/107468161-44bc3580-6b46-11eb-9175-d10e9749f747.png)
 
 
 
 
 
 ## Results are returned in ~15s with an interactive volcano plot and sortable tables:
-<img width="1214" alt="Screen Shot 2021-02-10 at 02 16 37" src="https://user-images.githubusercontent.com/12504176/107468037-07f03e80-6b46-11eb-8b27-9bccc3b5e9a6.png">
+![](https://user-images.githubusercontent.com/12504176/107468037-07f03e80-6b46-11eb-8b27-9bccc3b5e9a6.png)
+
 
 
 # How to deploy
