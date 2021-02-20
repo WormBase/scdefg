@@ -14,12 +14,9 @@ import plotly.graph_objects as go
 import time
 
 print('scvi-tools version:', scvi.__version__)
-
-
 logging.basicConfig(level=logging.INFO)
 logger=logging.getLogger(__name__)
-logger.info('Starting scvi-de-flask...')
-
+logger.info('Starting scdefg...')
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
