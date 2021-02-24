@@ -1,0 +1,2 @@
+recursive-include scdefg/templates *
+recursive-include scdefg/static *

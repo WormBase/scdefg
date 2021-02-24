@@ -134,6 +134,6 @@ dmypy.json
 model/
 results.csv
 selected_groups.csv
-static/fig.html
+scdefg/static/fig.html
 /workspace.xml
 .idea/
