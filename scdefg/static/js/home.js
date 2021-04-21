@@ -99,7 +99,8 @@ $(document).ready(function () {
                         $("#spinner-div").hide();
                         $("#newjob-div").show();
                         $("#results-div").show();
-                        $("#plot-display-div").html(data.deplothtml)
+                        $("#de-plot-display-div").html(data.deplothtml)
+                        $("#ma-plot-display-div").html(data.maplothtml)
                         table3 = $('#DE_ENRICHED_TABLE').DataTable({
                             data: data.dejsondata.data,
                             "paging": true,

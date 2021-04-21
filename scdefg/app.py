@@ -12,6 +12,7 @@ import scvi
 import numpy as np
 import plotly.graph_objects as go
 import time
+import anndata
 
 print('scvi-tools version:', scvi.__version__)
 logging.basicConfig(level=logging.INFO)
@@ -29,8 +30,9 @@ de_depleted_tables = Blueprint('de_depleted_tables', __name__, url_prefix='/de_d
 # this will load the pretrained model
 # if stored in a differently named folder, change the model_name variable to match
 # the model must have been saved with the anndata
-model_name='model'
-model = scvi.model.SCVI.load(model_name, use_cuda=False)
+model_name='../model'
+# adata=anndata.read_h5ad(model_name+'/adata.h5ad')
+model = scvi.model.SCVI.load(model_name, use_gpu=False)
 adata = model.adata.copy()
 
 # create a dataframe with list of cell types to be used for the selection tables
@@ -126,6 +128,9 @@ def receive_submission():
     # calculate the -log10(p-value) for the volcano
     de['minuslog10pval']=-np.log10(de['proba_not_de'] + 0.00001)
 
+    de['log10mean_expression']=np.log10((de['scale1'] + de['scale2'])/2)
+
+
     # all genes are initially colored black
     de['color'] = 'black'
     # uncomment line below to color genes by FDR significance
@@ -151,7 +156,7 @@ def receive_submission():
         group2_str = group2_str + str(cell2)
 
 #### This makes the volcano plot using plotly
-    fig = go.Figure(
+    defig = go.Figure(
                     data=go.Scatter(
                             x=de["lfc_mean"].round(3)
                             , y=de["minuslog10pval"].round(3)
@@ -164,7 +169,7 @@ def receive_submission():
                             , customdata=de.gene_name + '<br>' + de.gene_id
                             , hovertemplate='%{customdata} <br>' +
                                             '-log10 p-value: %{y}<br>' +
-                                            'Mean log fold change: %{x}' +
+                                            'Mean log2 fold change: %{x}' +
                                             '<extra>%{text}</extra>'
                             )
                             , layout= {
@@ -178,19 +183,54 @@ def receive_submission():
         #                             , "width":1000
                             }
                 )
-    fig.update_layout(hovermode='closest', template='none')
-    fig.add_shape(type="line", x0=-6, y0=2, x1=6, y1=2, line=dict(color="lightsalmon", width=2, dash="dash"))
-
+    defig.update_layout(hovermode='closest', template='none')
+    defig.add_shape(type="line", x0=-6, y0=2, x1=6, y1=2, line=dict(color="lightsalmon", width=2, dash="dash"))
     # overwrites the last figure in order to serve it in the results page
-    htmlfig = fig.to_html()
-    de_df = de[['gene_name','minuslog10pval','lfc_mean','lfc_std','proba_not_de']]
+    defig = defig.to_html()
+
+#### This makes the MA plot using plotly
+    mafig = go.Figure(
+        data=go.Scatter(
+            x=de["log10mean_expression"].round(3)
+            , y=de["lfc_mean"].round(3)
+            , mode='markers'
+            , marker=dict(
+                color=-de['minuslog10pval'],
+                colorscale='Viridis',
+                opacity=1)
+            , hoverinfo='text'
+            , text=de['gene_description_html']
+            , customdata=de.gene_name + '<br>' + de.gene_id + '<br>-log10 p-value: ' + de.minuslog10pval.round(2).astype(str)
+            , hovertemplate='%{customdata} <br>' +
+                            'log10 mean expression: %{x}<br>' +
+                            'mean log2 fold change: %{y}' +
+                            '<extra>%{text}</extra>'
+        )
+        , layout={
+            "title": {"text":
+                          group1_str + ' cells versus  <br>' + group2_str
+                , 'x': 0.5
+                      }
+            , 'xaxis': {'title': {"text": "log10 scvi normalized expression"}}
+            , 'yaxis': {'title': {"text": "Mean log2 fold change"}}
+            , "height": 700,
+            #                             , "width":1000
+        }
+    )
+    mafig.update_layout(hovermode='closest', template='none')
+    # overwrites the last figure in order to serve it in the results page
+    mafig = mafig.to_html()
+
+    ### creates the results tables in a dataframe that is converted to json
+    de_df = de[['gene_name','minuslog10pval','lfc_mean','lfc_std','proba_not_de','log10mean_expression']]
     print(de_df)
     de_df.index.rename('gene_id', inplace=True)
     de_df=de_df.reset_index()
-    de_df=de_df[['gene_id','gene_name','minuslog10pval','lfc_mean']].fillna('-')
-    de_df.columns=['Gene ID', 'Gene Name', '-log10 p-value','mean log2 fold change' ]
+    de_df=de_df[['gene_id','gene_name','minuslog10pval','lfc_mean','log10mean_expression']].fillna('-')
+    de_df.columns=['Gene ID', 'Gene Name', '-log10 p-value','mean log2 fold change', 'log 10 mean expression' ]
     de_df['mean log2 fold change']=de_df['mean log2 fold change'].astype(float).round(2)
     de_df['-log10 p-value'] = de_df['-log10 p-value'].astype(float).round(2)
+    de_df['log 10 mean expression'] = de_df['log 10 mean expression'].astype(float).round(2)
     # convert df to dict for sending as json to datatables
     de_dict_df = de_df.to_dict(orient='records')
     # convert column names into dict for sending as json to datatables
@@ -198,7 +238,7 @@ def receive_submission():
 
     title = group1_str + ' versus ' + group2_str
 
-    return jsonify({'deplothtml':htmlfig ,'dejsondata':{'data': de_dict_df, 'columns': columns}, 'title':title})
+    return jsonify({'deplothtml':defig ,'maplothtml':mafig ,'dejsondata':{'data': de_dict_df, 'columns': columns}, 'title':title})
 
 if __name__ == "__main__":
     app.run()
