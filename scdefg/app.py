@@ -34,15 +34,25 @@ model_name='../model'
 # adata=anndata.read_h5ad(model_name+'/adata.h5ad')
 model = scvi.model.SCVI.load(model_name, use_gpu=False)
 adata = model.adata.copy()
-
+print(adata.obs.columns)
 # create a dataframe with list of cell types to be used for the selection tables
 unique_cell_types=np.sort(adata.obs['cell_type'].unique())
+
+col_name='tissue'
+unique_cell_types=np.sort(adata.obs[col_name].unique())
+
 census=pd.DataFrame(index= unique_cell_types)
-census.index=census.index.rename('Cell Type')
+census_col_name='Tissue'
+census.index=census.index.rename(census_col_name)
 
 # the index of the dataframe is ignored when rendering the tables,
 # so we do reset_index to put the cell names in the first column
+
 census = census.reset_index()
+
+
+wow = adata.obs.groupby(['experiment_code','tissue','cell_type'],observed = True).size().rename('cells').reset_index()
+census=wow
 df_nice_names = census.copy()
 df_nice_names.columns = df_nice_names.columns.str.replace('_',' ')
 df_nice_names.columns = df_nice_names.columns.str.replace('-','&#8209;')
@@ -79,9 +89,9 @@ def receive_submission():
 
     # now map the index number to experiment name and cell type name
     group1 = pd.DataFrame()
-    group1['cell_type1'] = data1_df['row'].map(census['Cell Type'])
+    group1['cell_type1'] = data1_df['row'].map(census[census_col_name])
     group2 = pd.DataFrame()
-    group2['cell_type2'] = data2_df['row'].map(census['Cell Type'])
+    group2['cell_type2'] = data2_df['row'].map(census[census_col_name])
 
     genes = StringIO(json.loads(answer['genes'][0]))
     genes_df = pd.read_csv(genes, names=['selected_genes'])
@@ -92,12 +102,12 @@ def receive_submission():
     # then for each group in the data add them to the mask
     group1_mask = adata.obs.index != adata.obs.index
     for idx, row in group1.iterrows():
-        mask = adata.obs['cell_type']==row['cell_type1']
+        mask = adata.obs[col_name]==row['cell_type1']
         group1_mask = group1_mask | mask
 
     group2_mask = adata.obs.index != adata.obs.index
     for idx, row in group2.iterrows():
-        mask = adata.obs['cell_type']==row['cell_type2']
+        mask = adata.obs[col_name]==row['cell_type2']
         group2_mask = group2_mask | mask
 
     # the masks then define the two groups of cells on which to perform DE
