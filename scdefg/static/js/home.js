@@ -16,7 +16,8 @@ $(document).ready(function () {
         table1 = $('#FIRST_TABLE').DataTable({
             data: data.data,
             dom: 'Plfrtip',
-            scrollY: "30em",
+            lengthMenu: [[15, 30, 50, 100, -1], [15, 30, 50, 100, "All"]],
+            scrollY: "70em",
             scrollX: true,
             scrollCollapse: true,
             fixedColumns: {
@@ -39,7 +40,8 @@ $(document).ready(function () {
         table2 = $('#SECOND_TABLE').DataTable({
             data: data.data,
             dom: 'Plfrtip',
-            scrollY: "30em",
+            lengthMenu: [[15, 30, 50, 100, -1], [15, 30, 50, 100, "All"]],
+            scrollY: "70em",
             scrollX: true,
             scrollCollapse: true,
             fixedColumns: {
@@ -56,6 +58,7 @@ $(document).ready(function () {
                 style: 'multi+shift',
             },
         });
+        $('#SECOND_TABLE').DataTable().searchPanes.rebuildPane(0);
     });
 
     $('buttonbutton').click(function () {
@@ -71,8 +74,9 @@ $(document).ready(function () {
         var nrows2 = table2.rows('.selected').data().length
         var form_data = $('form').serializeArray()
         var genes = form_data[0].value
+        var jobname = form_data[1].value
         console.log(genes)
-
+        // console.log(jobname)
         if (table1.rows('.selected').data().length == 0) {
             alert(' You did not select any cells for group 1')
         }
@@ -86,6 +90,7 @@ $(document).ready(function () {
 
             if (confirmation == true) {
                 json_genes = JSON.stringify(genes);
+                json_jobname = JSON.stringify(jobname);
                 $("#button-div").hide();
                 $("#spinner-div").show();
 
@@ -94,6 +99,7 @@ $(document).ready(function () {
                     'data1': json1,
                     'data2': json2,
                     'genes': json_genes,
+                    'jobname': json_jobname
                 })
                     .done(function (data) {
                         $("#spinner-div").hide();

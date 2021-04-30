@@ -69,33 +69,27 @@
         <br>
         <div class="container-fluid" id="home-div">
             <div class="row">
-                <div class="col-sm-6" id="intro-div">
-                    <h3> scdefg: Differential expression on single cell RNA sequencing data</h3>
-
-                    <ul>
-
-                        <li>Select groups of interest and run a differential expression comparison.</li>
-                        <li>Prior to selection you can filter the view of the groups to select.</li>
-                        <li>Hold shift to select multiple rows.</li>
-                        <li>Results take about 15s to compute.</li>
-                        <li>You will get an interactive volcano plot, MA plot and tables with DE values.</li>
-
-                        <li>This app uses <a href="https://scvi-tools.org">scvi-tools</a>, code
-                            is available on
-                            <a href="https://github.com/Munfred/scdefg/">GitHub.</a>
-                    </ul>
-                    <p>
-                        To highlight genes add one gene per line below.
-                        Gene names (<samp>bus-1</samp>) or ID are accepted (<samp>WBGene00018223</samp>)
-                    </p>
+                <h3> scdefg: Differential expression on single cell RNA sequencing data</h3>
+                <p>This app uses <a href="https://scvi-tools.org">scvi-tools</a>, code
+                    is available on <a href="https://github.com/Munfred/scdefg/">GitHub.</a></p>
+                <ul>
+                    <li>Select groups of interest and run a differential expression comparison.</li>
+                    <li>Prior to selection you can filter the view of the groups to select.</li>
+                    <li>Hold shift to select multiple rows.</li>
+                    <li>Results take about 15s to compute.</li>
+                    <li>You will get an interactive volcano plot, MA plot and tables with DE values.</li>
+                    <li>To highlight genes add one gene per line below.</li>
+                </ul>
+                <div class="normal" id="intro-div">
+                    {# this div gets filled with the custom text users may choose to provide#}
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="normal">
                 <form>
                     <div>
                         <textarea name="genes" rows="5" cols="30"></textarea>
                         <br>
-                        <label for="lname">Job name (optional):</label>
+                        <label for="lname">Job name (optional, for results files):</label>
                         <input type="text" id="jobname" name="jobname"><br>
                     </div>
                 </form>
