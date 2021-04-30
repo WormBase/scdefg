@@ -7,43 +7,38 @@ $(document).ready(function () {
     $("#results-div").hide();
     $("#spinner-div").hide();
     $("#newjob-div").hide();
+    $.get('/user_configs/', function (user_configs) {
+        if (user_configs.intro != "default") {
+            $("#intro-div").html(user_configs.intro)
+        }
+    });
     $.get('/tables/', function (data) {
         table1 = $('#FIRST_TABLE').DataTable({
             data: data.data,
-            "paging": false,
-            "ordering": true,
-            "info": true,
-            "searching": false,
-            "pageLength": 25,
-            dom: 'frtip',
+            dom: 'Plfrtip',
             scrollY: "30em",
             scrollX: true,
             scrollCollapse: true,
             fixedColumns: {
-                leftColumns: 1,
+                leftColumns: 0,
                 rightColumns: 0
             },
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: -1
+            }],
             columns: data.columns,
             select: {
                 style: 'multi+shift',
-                items: 'cell',
             },
-            "columnDefs": [
-                {"width": "20em", "targets": 0}
-            ],
         });
     });
-
 
     $.get('/tables/', function (data) {
         table2 = $('#SECOND_TABLE').DataTable({
             data: data.data,
-            "paging": false,
-            "ordering": true,
-            "info": true,
-            "searching": false,
-            "pageLength": 25,
-            dom: 'frtip',
+            dom: 'Plfrtip',
             scrollY: "30em",
             scrollX: true,
             scrollCollapse: true,
@@ -51,36 +46,41 @@ $(document).ready(function () {
                 leftColumns: 1,
                 rightColumns: 0
             },
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: -1
+            }],
             columns: data.columns,
             select: {
                 style: 'multi+shift',
-                items: 'cell',
             },
-            "columnDefs": [
-                {"width": "20em", "targets": 0}
-            ],
         });
     });
 
+    $('buttonbutton').click(function () {
+        console.log(table1.rows('.selected').data())
+        alert(table1.rows('.selected').data() + ' row(s) selected');
+    });
     $('button').click(function () {
-        var data1 = table1.cells(['.selected']).toArray();
+        var data1 = table1.rows(['.selected']).data().toArray();
         var json1 = JSON.stringify(data1);
-        var ncells1 = table1.cells(['.selected']).data().toArray().reduce((a, b) => a + b, 0)
-        var data2 = table2.cells(['.selected']).toArray();
+        var data2 = table2.rows(['.selected']).data().toArray();
         var json2 = JSON.stringify(data2);
-        var ncells2 = table2.cells(['.selected']).data().toArray().reduce((a, b) => a + b, 0);
+        var nrows1 = table1.rows('.selected').data().length
+        var nrows2 = table2.rows('.selected').data().length
         var form_data = $('form').serializeArray()
         var genes = form_data[0].value
         console.log(genes)
 
-        if (ncells1 == 0) {
+        if (table1.rows('.selected').data().length == 0) {
             alert(' You did not select any cells for group 1')
         }
-        if (ncells2 == 0) {
+        if (table2.rows('.selected').data().length == 0) {
             alert(' You did not select any cells for group 2')
         }
 
-        if (ncells1 != 0 && ncells2 != 0) {
+        if (nrows1 != 0 && nrows2 != 0) {
 
             var confirmation = true;
 

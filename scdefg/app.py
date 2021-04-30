@@ -1,9 +1,10 @@
 print('starting imports....')
-
+# the import below is the user configs
+from scdefg import config
 import warnings
 # ignore annoying pandas future warning
 warnings.simplefilter(action='ignore', category=FutureWarning)
-from flask import Flask, Response, jsonify, request, render_template, Blueprint, send_file, redirect, url_for
+from flask import Flask, jsonify, request, render_template, Blueprint
 import logging
 import pandas as pd
 import json
@@ -11,8 +12,6 @@ from io import StringIO
 import scvi
 import numpy as np
 import plotly.graph_objects as go
-import time
-import anndata
 
 print('scvi-tools version:', scvi.__version__)
 logging.basicConfig(level=logging.INFO)
@@ -23,50 +22,44 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 tables = Blueprint('tables', __name__, url_prefix='/tables')
+user_configs = Blueprint('user_configs', __name__, url_prefix='/user_configs')
 de_tables = Blueprint('de_tables', __name__, url_prefix='/de_tables')
 de_depleted_tables = Blueprint('de_depleted_tables', __name__, url_prefix='/de_depleted_tables')
 
+
+
+introduction_html_text='default'
+table_selection_columns=['experiment_code', 'tissue']
+model_file='../model'
+
+
 ############################ SCVI AND PANDAS PREP ##############################
 # this will load the pretrained model
-# if stored in a differently named folder, change the model_name variable to match
-# the model must have been saved with the anndata
-model_name='../model'
-# adata=anndata.read_h5ad(model_name+'/adata.h5ad')
-model = scvi.model.SCVI.load(model_name, use_gpu=False)
+# you specify where the model is stored in the config file
+# the model must have been saved with the anndata .h5ad format
+
+model = scvi.model.SCVI.load(model_file, use_gpu=False)
 adata = model.adata.copy()
 print(adata.obs.columns)
-# create a dataframe with list of cell types to be used for the selection tables
-unique_cell_types=np.sort(adata.obs['cell_type'].unique())
 
-col_name='tissue'
-unique_cell_types=np.sort(adata.obs[col_name].unique())
-
-census=pd.DataFrame(index= unique_cell_types)
-census_col_name='Tissue'
-census.index=census.index.rename(census_col_name)
-
-# the index of the dataframe is ignored when rendering the tables,
-# so we do reset_index to put the cell names in the first column
-
-census = census.reset_index()
-
-
-wow = adata.obs.groupby(['experiment_code','tissue','cell_type'],observed = True).size().rename('cells').reset_index()
-census=wow
-df_nice_names = census.copy()
-df_nice_names.columns = df_nice_names.columns.str.replace('_',' ')
-df_nice_names.columns = df_nice_names.columns.str.replace('-','&#8209;')
-
-# convert df to dict for sending as json to datatables, replace underscore with space for aesthetics
-dict_df = df_nice_names.replace('_',' ', regex=True).to_dict(orient='records')
+#crates the selection table using the columns specified in the config file
+selection_table_df = adata.obs.groupby(table_selection_columns, observed = True).size().rename('#cells').reset_index()
+selection_table_dict = selection_table_df.to_dict(orient='records')
 # convert column names into dict for sending as json to datatables
-columns = [{"data": item, "title": item} for item in df_nice_names.columns]
+columns = [{"data": item, "title": item} for item in selection_table_df.columns]
 
 #### datatables to render the selection tables ####
 @tables.route("/", methods=['GET', 'POST'])
 def clientside_table_content():
-    return jsonify({'data': dict_df, 'columns': columns})
+    return jsonify({'data': selection_table_dict, 'columns': columns})
 app.register_blueprint(tables)
+
+#### datatables to render the selection tables ####
+@user_configs.route("/", methods=['GET', 'POST'])
+def send_user_configs():
+    return jsonify({'intro':introduction_html_text,
+                    'table_selection_columns':table_selection_columns})
+app.register_blueprint(user_configs)
 
 # this is the landing page
 @app.route("/", methods=['GET', 'POST'])
@@ -83,15 +76,9 @@ def receive_submission():
     # need to convert the json strings to dict, then to a data frame
     # data1 is the selection for the first group, data2 for the second
     data1 = json.loads(answer['data1'][0])
-    data1_df = pd.DataFrame.from_dict(data1[0])
+    data1_df = pd.DataFrame.from_records(data1)
     data2 = json.loads(answer['data2'][0])
-    data2_df = pd.DataFrame.from_dict(data2[0])
-
-    # now map the index number to experiment name and cell type name
-    group1 = pd.DataFrame()
-    group1['cell_type1'] = data1_df['row'].map(census[census_col_name])
-    group2 = pd.DataFrame()
-    group2['cell_type2'] = data2_df['row'].map(census[census_col_name])
+    data2_df = pd.DataFrame.from_records(data2)
 
     genes = StringIO(json.loads(answer['genes'][0]))
     genes_df = pd.read_csv(genes, names=['selected_genes'])
@@ -101,14 +88,29 @@ def receive_submission():
     # first create the mask as an array of all false
     # then for each group in the data add them to the mask
     group1_mask = adata.obs.index != adata.obs.index
-    for idx, row in group1.iterrows():
-        mask = adata.obs[col_name]==row['cell_type1']
-        group1_mask = group1_mask | mask
+    for idx, row in data1_df.iterrows():
+        # create an array of booleans that starts with all of them true
+        current_mask = adata.obs.index == adata.obs.index
+        # need to do the _ replace for matching with the pretty names
+        for col in table_selection_columns:
+            # perform successive AND operations to create the mask
+            # that keeps only the cells matching the user selection
+            partial_mask = adata.obs[col] == row[col]
+            current_mask = current_mask & partial_mask
+        group1_mask = group1_mask | current_mask
 
+    # first create the mask as an array of all false
+    # then for each group in the data add them to the mask
     group2_mask = adata.obs.index != adata.obs.index
-    for idx, row in group2.iterrows():
-        mask = adata.obs[col_name]==row['cell_type2']
-        group2_mask = group2_mask | mask
+    for idx, row in data2_df.iterrows():
+        # create an array of booleans that starts with all of them true
+        current_mask = adata.obs.index == adata.obs.index
+        for col in table_selection_columns:
+            # perform successsive AND operations to create the mask
+            # that keeps only the cells matching the user selection
+            partial_mask = adata.obs[col] == row[col]
+            current_mask = current_mask & partial_mask
+        group2_mask = group2_mask | current_mask
 
     # the masks then define the two groups of cells on which to perform DE
     de = model.differential_expression( adata,
@@ -119,7 +121,8 @@ def receive_submission():
 
     # first we create these variables to customize the hover text in plotly's heatmap
     # the text needs to be arranged in a matrix the same shape as the heatmap
-    #try to add gene descriptions and gene names if the adata has those, otherwise add a blank
+    # try to add gene descriptions and gene names if the adata has those, otherwise add a blank
+    # the adata.var fields should include a field named gene_id and gene_name, otherwise they will be filled with a blank default
 
     try:
         de['gene_description']=de.index.map(adata.var['gene_description'])
@@ -130,9 +133,9 @@ def receive_submission():
         # de['gene_id'] = de.index.map(adata.var['gene_id'])
 
     except:
-        de['gene_description_html'] = 'gene description here'
-        de['gene_name']='gene name here'
-        de['gene_id']='gene ID here'
+        de['gene_description_html'] = 'warning: adata.var["gene_description"] does not exist, filled with blank'
+        de['gene_name']='warning: adata.var["gene_name"] does not exist, filled with blank'
+        de['gene_id']='warning: adata.var["gene_id"] does not exist, filled with blank'
 
     de['gene_name']=de['gene_name'].fillna('-')
     # calculate the -log10(p-value) for the volcano
@@ -155,15 +158,15 @@ def receive_submission():
         de['color'][de['gene_name'].str.contains(partial_string)] = 'red'
 
 
-    group1_str = ''
-    for cell1 in group1.cell_type1.values:
-        if group1_str != '':  group1_str = group1_str + ', '
-        group1_str = group1_str + str(cell1)
+    group1_str = 'group1str'
+    # for cell1 in group1.cell_type1.values:
+    #     if group1_str != '':  group1_str = group1_str + ', '
+    #     group1_str = group1_str + str(cell1)
 
-    group2_str = ''
-    for cell2 in group2.cell_type2.values:
-        if group2_str != '':  group2_str = group2_str + ', '
-        group2_str = group2_str + str(cell2)
+    group2_str = 'group2str'
+    # for cell2 in group2.cell_type2.values:
+    #     if group2_str != '':  group2_str = group2_str + ', '
+    #     group2_str = group2_str + str(cell2)
 
 #### This makes the volcano plot using plotly
     defig = go.Figure(
