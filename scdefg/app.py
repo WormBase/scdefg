@@ -311,11 +311,11 @@ def launch(scvi_tools_model_path,selection_columns,intro_text_html,host,port):
         de_df['-log10 p-value'] = de_df['-log10 p-value'].astype(float).round(2)
         de_df['log 10 mean expression'] = de_df['log 10 mean expression'].astype(float).round(2)
         # convert df to dict for sending as json to datatables
-        de_dict_df = de_df.to_dict(orient='records')
+        de_csv_df = de_df.to_csv()
         # convert column names into dict for sending as json to datatables
         columns = [{"data": item, "title": item} for item in de_df.columns]
 
-        return jsonify({'deplothtml':defig ,'maplothtml':mafig ,'dejsondata':{'data': de_dict_df, 'columns': columns}, 'title':str(jobname)})
+        return jsonify({'deplothtml':defig ,'maplothtml':mafig ,'decsv':{'data': de_csv_df, 'columns': columns}, 'title':str(jobname)})
 
 
     ######### END OF FUNCTION DEFS #########

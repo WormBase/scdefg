@@ -3,7 +3,7 @@
 var table1
 var table2
 
-const getTableConf = (data) => (
+const getInputTableContent = (data) => (
     {
         data: data.data,
         dom: 'Plfrtip',
@@ -26,6 +26,67 @@ const getTableConf = (data) => (
         },
     });
 
+const convertResultCSVToJson = csvString => {
+    let lines = csvString.split('\n');
+    let headers = lines.shift().split(',');
+    headers[0] = "rowNum";
+    let allLines = lines.map(line => {
+        let linearr = line.split(',');
+        let singeLine = Object.assign({}, ...headers.map((header, idx) => {
+            let headerObj = {};
+            headerObj[header] = linearr[idx];
+            return headerObj;
+        }));
+        if (Object.values(singeLine).every(value => value !== undefined)) {
+            return singeLine;
+        }
+    });
+    return allLines.filter(line => line !== undefined);
+}
+
+const getOutputTableContent = (data, columns, title, asc = true) => ({
+    data: data,
+    "paging": true,
+    "ordering": true,
+    "lengthMenu": [[100, 250, 500, -1], [100, 250, 500, "All"]],
+    "order": [[3, asc ? "asc" : "desc"]],
+    "info": true,
+    "searching": true,
+    dom: 'Bfrtipl',
+    buttons: [
+        {
+            extend: 'csvHtml5',
+            title: title,
+            text: 'Download csv',
+        },
+        {
+            extend: 'excelHtml5',
+            title: title,
+            text: 'Download Excel',
+        },
+        {
+            extend: 'copyHtml5',
+            text: 'Copy all',
+            title: title,
+        },
+        {
+            extend: 'copyHtml5',
+            text: 'Copy current page',
+            title: title,
+            exportOptions: {
+                modifier: {
+                    page: 'current'
+                }
+            }
+        }],
+    scrollY: "70em",
+    columns: columns,
+    // select: {
+    //     style: 'multi+shift',
+    //     items: 'cell'
+    // }
+});
+
 $(document).ready(function () {
     $("#results-div").hide();
     $("#spinner-div").hide();
@@ -37,8 +98,8 @@ $(document).ready(function () {
     });
 
     $.get('/tables/', function (data) {
-        table1 = $('#FIRST_TABLE').DataTable(getTableConf(data));
-        table2 = $('#SECOND_TABLE').DataTable(getTableConf(data));
+        table1 = $('#FIRST_TABLE').DataTable(getInputTableContent(data));
+        table2 = $('#SECOND_TABLE').DataTable(getInputTableContent(data));
     });
 
     $('buttonbutton').click(function () {
@@ -87,102 +148,16 @@ $(document).ready(function () {
                         $("#results-div").show();
                         $("#de-plot-display-div").html(data.deplothtml)
                         $("#ma-plot-display-div").html(data.maplothtml)
-                        table3 = $('#DE_ENRICHED_TABLE').DataTable({
-                            data: data.dejsondata.data,
-                            "paging": true,
-                            "ordering": true,
-                            "lengthMenu": [[100, 250, 500, -1], [100, 250, 500, "All"]],
-                            "order": [[3, "desc"]],
-                            "info": true,
-                            "searching": true,
-                            dom: 'Bfrtipl',
-                            buttons: [
-                                {
-                                    extend: 'csvHtml5',
-                                    title: data.title,
-                                    text: 'Download csv',
-                                },
-                                {
-                                    extend: 'excelHtml5',
-                                    title: data.title,
-                                    text: 'Download Excel',
-                                },
-                                {
-                                    extend: 'copyHtml5',
-                                    text: 'Copy all',
-                                    title: data.title,
-                                },
-                                {
-                                    extend: 'copyHtml5',
-                                    text: 'Copy current page',
-                                    title: data.title,
-                                    exportOptions: {
-                                        modifier: {
-                                            page: 'current'
-                                        }
-                                    }
-                                }],
-                            scrollY: "70em",
-                            columns: data.dejsondata.columns,
-                            // select: {
-                            //     style: 'multi+shift',
-                            //     items: 'cell'
-                            // }
-                        });
-
-                        table4 = $('#DE_DEPLETED_TABLE').DataTable({
-                            data: data.dejsondata.data,
-                            "paging": true,
-                            "ordering": true,
-                            "lengthMenu": [[100, 250, 500, -1], [100, 250, 500, "All"]],
-                            "order": [[3, "asc"]],
-                            "info": true,
-                            "searching": true,
-                            dom: 'Bfrtipl',
-                            buttons: [
-                                {
-                                    extend: 'csvHtml5',
-                                    title: data.title,
-                                    text: 'Download csv',
-                                },
-                                {
-                                    extend: 'excelHtml5',
-                                    title: data.title,
-                                    text: 'Download Excel',
-                                },
-                                {
-                                    extend: 'copyHtml5',
-                                    text: 'Copy all',
-                                    title: data.title,
-                                },
-                                {
-                                    extend: 'copyHtml5',
-                                    text: 'Copy current page',
-                                    title: data.title,
-                                    exportOptions: {
-                                        modifier: {
-                                            page: 'current'
-                                        }
-                                    }
-                                }],
-                            scrollY: "70em",
-                            columns: data.dejsondata.columns,
-                            // select: {
-                            //     style: 'multi+shift',
-                            //     items: 'cell'
-                            // }
-                        });
-
+                        table3 = $('#DE_ENRICHED_TABLE').DataTable(getOutputTableContent(
+                            convertResultCSVToJson(data.decsv.data), data.decsv.columns, data.title, false));
+                        table4 = $('#DE_DEPLETED_TABLE').DataTable(getOutputTableContent(
+                            convertResultCSVToJson(data.decsv.data), data.decsv.columns, data.title, true));
                     })
                     .fail(function () {
                             alert("Something went wrong. Refresh the page and try again. If it keeps happening email eduardo@wormbase.org")
-                        }
-                    );
+                        });
             }
         }
-        ;
     });
-
-
 });
 
