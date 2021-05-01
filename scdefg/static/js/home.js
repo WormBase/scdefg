@@ -3,6 +3,29 @@
 var table1
 var table2
 
+const getTableConf = (data) => (
+    {
+        data: data.data,
+        dom: 'Plfrtip',
+        lengthMenu: [[15, 30, 50, 100, -1], [15, 30, 50, 100, "All"]],
+        scrollY: "70em",
+        scrollX: true,
+        scrollCollapse: true,
+        fixedColumns: {
+            leftColumns: 0,
+            rightColumns: 0
+        },
+        columnDefs: [{
+            orderable: false,
+            className: 'select-checkbox',
+            targets: -1
+        }],
+        columns: data.columns,
+        select: {
+            style: 'multi+shift',
+        },
+    });
+
 $(document).ready(function () {
     $("#results-div").hide();
     $("#spinner-div").hide();
@@ -12,53 +35,10 @@ $(document).ready(function () {
             $("#intro-div").html(user_configs.intro)
         }
     });
-    $.get('/tables/', function (data) {
-        table1 = $('#FIRST_TABLE').DataTable({
-            data: data.data,
-            dom: 'Plfrtip',
-            lengthMenu: [[15, 30, 50, 100, -1], [15, 30, 50, 100, "All"]],
-            scrollY: "70em",
-            scrollX: true,
-            scrollCollapse: true,
-            fixedColumns: {
-                leftColumns: 0,
-                rightColumns: 0
-            },
-            columnDefs: [{
-                orderable: false,
-                className: 'select-checkbox',
-                targets: -1
-            }],
-            columns: data.columns,
-            select: {
-                style: 'multi+shift',
-            },
-        });
-    });
 
     $.get('/tables/', function (data) {
-        table2 = $('#SECOND_TABLE').DataTable({
-            data: data.data,
-            dom: 'Plfrtip',
-            lengthMenu: [[15, 30, 50, 100, -1], [15, 30, 50, 100, "All"]],
-            scrollY: "70em",
-            scrollX: true,
-            scrollCollapse: true,
-            fixedColumns: {
-                leftColumns: 1,
-                rightColumns: 0
-            },
-            columnDefs: [{
-                orderable: false,
-                className: 'select-checkbox',
-                targets: -1
-            }],
-            columns: data.columns,
-            select: {
-                style: 'multi+shift',
-            },
-        });
-        $('#SECOND_TABLE').DataTable().searchPanes.rebuildPane(0);
+        table1 = $('#FIRST_TABLE').DataTable(getTableConf(data));
+        table2 = $('#SECOND_TABLE').DataTable(getTableConf(data));
     });
 
     $('buttonbutton').click(function () {
