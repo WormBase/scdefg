@@ -99,7 +99,29 @@ $(document).ready(function () {
 
     $.get('/tables/', function (data) {
         table1 = $('#FIRST_TABLE').DataTable(getInputTableContent(data));
+        table1.searchPanes.container().hide();
         table2 = $('#SECOND_TABLE').DataTable(getInputTableContent(data));
+        table2.searchPanes.container().hide();
+    });
+
+    $('#table1FilterBtn').click(() => {
+        if ($('#table1FilterBtn').html() === "Show Filters") {
+            table1.searchPanes.container().show();
+            $('#table1FilterBtn').html("Hide Filters");
+        } else {
+            table1.searchPanes.container().hide();
+            $('#table1FilterBtn').html("Show Filters");
+        }
+    });
+
+    $('#table2FilterBtn').click(() => {
+        if ($('#table2FilterBtn').html() === "Show Filters") {
+            table2.searchPanes.container().show();
+            $('#table2FilterBtn').html("Hide Filters");
+        } else {
+            table2.searchPanes.container().hide();
+            $('#table2FilterBtn').html("Show Filters");
+        }
     });
 
     $('buttonbutton').click(function () {
