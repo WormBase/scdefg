@@ -152,6 +152,7 @@ $(document).ready(function () {
                             convertResultCSVToJson(data.decsv.data), data.decsv.columns, data.title, false));
                         table4 = $('#DE_DEPLETED_TABLE').DataTable(getOutputTableContent(
                             convertResultCSVToJson(data.decsv.data), data.decsv.columns, data.title, true));
+                        document.getElementById("results-div").scrollIntoView();
                     })
                     .fail(function () {
                             alert("Something went wrong. Refresh the page and try again. If it keeps happening email eduardo@wormbase.org")
