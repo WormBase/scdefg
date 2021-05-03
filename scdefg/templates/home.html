@@ -61,104 +61,122 @@
 
 <body class="body">
 <div class="container">
-    <div>
-        <br>
-        <div class="container-fluid" id="home-div">
-            <div class="row">
-                <h3> scdefg: Differential expression on single cell RNA sequencing data</h3>
-                <p>This app uses <a href="https://scvi-tools.org">scvi-tools</a>, code
-                    is available on <a href="https://github.com/Munfred/scdefg/">GitHub.</a></p>
-                <ul>
-                    <li>Select groups of interest and run a differential expression comparison.</li>
-                    <li>Prior to selection you can filter the view of the groups to select.</li>
-                    <li>Hold shift to select multiple rows.</li>
-                    <li>Results take about 15s to compute.</li>
-                    <li>You will get an interactive volcano plot, MA plot and tables with DE values.</li>
-                    <li>To highlight genes add one gene per line below.</li>
-                </ul>
-                <div class="normal" id="intro-div">
-                    {# this div gets filled with the custom text users may choose to provide#}
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="container-fluid" id="home-div">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3> scdefg: Differential expression on single cell RNA sequencing data</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <p>This app uses <a href="https://scvi-tools.org">scvi-tools</a>, code
+                            is available on <a href="https://github.com/Munfred/scdefg/">GitHub.</a></p>
+                        <ul>
+                            <li>Select groups of interest and run a differential expression comparison.</li>
+                            <li>Prior to selection you can filter the view of the groups to select.</li>
+                            <li>Hold shift to select multiple rows.</li>
+                            <li>Results take about 15s to compute.</li>
+                            <li>You will get an interactive volcano plot, MA plot and tables with DE values.</li>
+                            <li>To highlight genes add one gene per line below.</li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="normal" id="intro-div">
+                            {# this div gets filled with the custom text users may choose to provide#}
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="normal">
-                <form>
-                    <div>
-                        <textarea name="genes" rows="5" cols="30"></textarea>
-                        <br>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="normal">
+                            <textarea name="genes" rows="5" id="genesList" cols="30"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+                <div class="row">
+                    <div class="col">
+                        <div id="button-div">
+                            <button type="submit" value="Submit" id="submitButton" class="btn btn-lg btn-primary">Submit 💥 📱
+                                🔬
+                            </button>
+
+                        </div>
+                        <div id="spinner-div">
+                            <div class="spinner-border"></div>
+                            Processing job...takes about 15s
+                        </div>
+                        <div id="newjob-div"><input type="button" class="btn-lg btn-primary"
+                                                    onclick="location.href='/';"
+                                                    value="Submit another job (refresh page)"/></div>
+
+                    </div>
+                    <div class="col">
                         <label for="lname">Job name (optional, for results files):</label>
-                        <input type="text" id="jobname" name="jobname"><br>
+                        <input type="text" id="jobname" name="jobname">
                     </div>
-                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h5>Select group 1 cells </h5>
+                        <div class="table_container">
+                            <table id="FIRST_TABLE" cellspacing="0" class="cell-border stripe"
+                                   style="border-bottom: none; " width="100%">
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <h5>Select group 2 cells</h5>
+                        <div class="table_container">
+                            <table id="SECOND_TABLE" cellspacing="0" class="cell-border stripe"
+                                   style="border-bottom: none; " width="100%"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="container-fluid" id="results-div">
                 <div>
-                    <br>
-                    <div id="button-div">
-                        <button type="submit" value="Submit" class="btn btn-lg btn-primary">Submit 💥 📱
-                            🔬
-                        </button>
-
+                    <div id="de-plot-div">
+                        <h3> Differential Expression Results - Volcano Plot </h3>
+                        <div style="height:100%; width:90%" id="de-plot-display-div"></div>
                     </div>
-                    <div id="spinner-div">
-                        <div class="spinner-border"></div>
-                        Processing job...takes about 15s
+                    <div id="ma-plot-div">
+                        <h3> Differential Expression Results - MA Plot</h3>
+                        <div style="height:100%; width:90%" id="ma-plot-display-div"></div>
                     </div>
-                    <div id="newjob-div"><input type="button" class="btn-lg btn-primary"
-                                                onclick="location.href='/';"
-                                                value="Submit another job (refresh page)"/></div>
-
-
-                </div>
-            </div>
-        </div>
-        <div class="row"><div class="col-sm-12">&nbsp;</div></div>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-6">
-                    <h5>Select group 1 cells </h5>
-                    <div class="table_container">
-                        <table id="FIRST_TABLE" cellspacing="0" class="cell-border stripe"
-                               style="border-bottom: none; " width="100%">
-                        </table>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <h5>Select group 2 cells</h5>
-                    <div class="table_container">
-                        <table id="SECOND_TABLE" cellspacing="0" class="cell-border stripe"
-                               style="border-bottom: none; " width="100%"></table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row"><div class="col-sm-12">&nbsp;</div></div>
-        <div class="container-fluid" id="results-div">
-            <div>
-                <div id="de-plot-div">
-                    <h3> Differential Expression Results - Volcano Plot </h3>
-                    <div style="height:100%; width:90%" id="de-plot-display-div"></div>
-                </div>
-                <div id="ma-plot-div">
-                    <h3> Differential Expression Results - MA Plot</h3>
-                    <div style="height:100%; width:90%" id="ma-plot-display-div"></div>
-                </div>
-                <div class="container-fluid" id="de-results-tables-div">
-                    <div class="row">
-                        <div class="col-sm">
-                            <h3>Enriched genes</h3>
+                    <div class="container-fluid" id="de-results-tables-div">
+                        <div class="row">
                             <div class="col-sm">
-                                <div class="table_container">
-                                    <table id="DE_ENRICHED_TABLE" cellspacing="0" class="cell-border stripe display compact"
-                                           style="border-bottom: none; " width="100%">
-                                    </table>
+                                <h3>Enriched genes</h3>
+                                <div class="col-sm">
+                                    <div class="table_container">
+                                        <table id="DE_ENRICHED_TABLE" cellspacing="0" class="cell-border stripe display compact"
+                                               style="border-bottom: none; " width="100%">
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm">
-                            <h3>Depleted genes</h3>
                             <div class="col-sm">
-                                <div class="table_container">
-                                    <table id="DE_DEPLETED_TABLE" cellspacing="0" class="cell-border stripe display compact"
-                                           style="border-bottom: none; " width="100%">
-                                    </table>
+                                <h3>Depleted genes</h3>
+                                <div class="col-sm">
+                                    <div class="table_container">
+                                        <table id="DE_DEPLETED_TABLE" cellspacing="0" class="cell-border stripe display compact"
+                                               style="border-bottom: none; " width="100%">
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

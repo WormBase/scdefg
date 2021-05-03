@@ -106,16 +106,15 @@ $(document).ready(function () {
         console.log(table1.rows('.selected').data())
         alert(table1.rows('.selected').data() + ' row(s) selected');
     });
-    $('button').click(function () {
+    $('#submitButton').click(function () {
         var data1 = table1.rows(['.selected']).data().toArray();
         var json1 = JSON.stringify(data1);
         var data2 = table2.rows(['.selected']).data().toArray();
         var json2 = JSON.stringify(data2);
         var nrows1 = table1.rows('.selected').data().length
         var nrows2 = table2.rows('.selected').data().length
-        var form_data = $('form').serializeArray()
-        var genes = form_data[0].value
-        var jobname = form_data[1].value
+        var genes = $('#genesList').val()
+        var jobname = $('#jobname').val()
         console.log(genes)
         // console.log(jobname)
         if (table1.rows('.selected').data().length == 0) {
