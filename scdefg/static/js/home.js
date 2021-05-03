@@ -29,18 +29,23 @@ const getInputTableContent = (data) => (
 const convertResultCSVToJson = csvString => {
     let lines = csvString.split('\n');
     let headers = lines.shift().split(',');
+    // add missing lable in headers for first column
     headers[0] = "rowNum";
     let allLines = lines.map(line => {
         let linearr = line.split(',');
+        // create a json object for each key-value pair (header-content) and merge them into a single json obj
+        // with Object.assign
         let singeLine = Object.assign({}, ...headers.map((header, idx) => {
             let headerObj = {};
             headerObj[header] = linearr[idx];
             return headerObj;
         }));
+        // filter out empty lines
         if (Object.values(singeLine).every(value => value !== undefined)) {
             return singeLine;
         }
     });
+    // filter out empty lines
     return allLines.filter(line => line !== undefined);
 }
 
@@ -107,7 +112,7 @@ $(document).ready(function () {
     $('#table1FilterBtn').click(() => {
         if ($('#table1FilterBtn').html() === "Show Filters") {
             table1.searchPanes.container().show();
-            $('#table1FilterBtn').html("Hide Filters");
+            $('#table1FilterBtn').html("&nbsp;Hide Filters&nbsp;");
         } else {
             table1.searchPanes.container().hide();
             $('#table1FilterBtn').html("Show Filters");
@@ -117,7 +122,7 @@ $(document).ready(function () {
     $('#table2FilterBtn').click(() => {
         if ($('#table2FilterBtn').html() === "Show Filters") {
             table2.searchPanes.container().show();
-            $('#table2FilterBtn').html("Hide Filters");
+            $('#table2FilterBtn').html("&nbsp;Hide Filters&nbsp;");
         } else {
             table2.searchPanes.container().hide();
             $('#table2FilterBtn').html("Show Filters");

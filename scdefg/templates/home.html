@@ -96,8 +96,12 @@
                 </div>
                 <div class="row"><div class="col-sm-12">&nbsp;</div></div>
                 <div class="row">
-                    <div class="col">
-                        <div id="button-div">
+                    <div class="col-sm-6">
+                        <label for="lname">Job name (optional, for results files):</label>
+                        <input type="text" id="jobname" name="jobname">
+                    </div>
+                    <div class="col-sm-6">
+                        <div id="button-div" class="pull-right">
                             <button type="submit" value="Submit" id="submitButton" class="btn btn-lg btn-primary">Submit 💥 📱
                                 🔬
                             </button>
@@ -110,16 +114,12 @@
                         <div id="newjob-div"><input type="button" class="btn-lg btn-primary"
                                                     onclick="location.href='/';"
                                                     value="Submit another job (refresh page)"/></div>
-
-                    </div>
-                    <div class="col">
-                        <label for="lname">Job name (optional, for results files):</label>
-                        <input type="text" id="jobname" name="jobname">
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
     <div class="row">
         <div class="col-sm-12">
@@ -127,18 +127,18 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <h5 style="display: inline-block;">Select group 1 cells</h5>
-                        &nbsp;&nbsp;<button id="table1FilterBtn">Show Filters</button>
+                        &nbsp;&nbsp;<button id="table1FilterBtn" class="btn btn-secondary btn-sm">Show Filters</button>
                         <div class="table_container">
-                            <table id="FIRST_TABLE" cellspacing="0" class="cell-border stripe"
+                            <table id="FIRST_TABLE" cellspacing="0" class="cell-border stripe compact"
                                    style="border-bottom: none; " width="100%">
                             </table>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <h5 style="display: inline-block;">Select group 2 cells</h5>
-                        &nbsp;&nbsp;<button id="table2FilterBtn">Show Filters</button>
+                        &nbsp;&nbsp;<button id="table2FilterBtn" class="btn btn-secondary btn-sm">Show Filters</button>
                         <div class="table_container">
-                            <table id="SECOND_TABLE" cellspacing="0" class="cell-border stripe"
+                            <table id="SECOND_TABLE" cellspacing="0" class="cell-border stripe compact"
                                    style="border-bottom: none; " width="100%"></table>
                         </div>
                     </div>
