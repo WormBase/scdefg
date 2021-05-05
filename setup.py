@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     setuptools.setup(
         name="scdefg",
-        version="0.1.1",
+        version="0.2.0",
         author="Eduardo da Veiga Beltrame",
         author_email="munfred@brandeis.edu",
         description="A single page Flask app with GUI for performing differential expression on with scvi-tools.",
