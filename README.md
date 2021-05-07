@@ -40,17 +40,3 @@ wget -q -O tmp.zip https://github.com/Munfred/scvi-de-flask/releases/download/ta
 mv taylor2020_100955cells_11569genes_20210129_scvi model
 scdefg/app.py ./model -s tissue -s cell_type -s experiment_code
 ```
-
-### Simple deployment
-
-If you don't care about production robustness and just want a few users to access the app concurrently, an easy
-deployment can be done following this tutorial up to and including section 3:
-https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
-
-Then start the app using gunicorn and specify the number of workers and timeout. 5000 is the default flask port.
-
-```
-gunicorn --workers 3 --timeout 120  --bind 0.0.0.0:5000 wsgi:app 
-```
-
-If you are doing a production deployment, then follow the guide until the end.
