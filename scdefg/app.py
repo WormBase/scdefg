@@ -10,10 +10,13 @@ from io import StringIO
 import scvi
 import numpy as np
 import plotly.graph_objects as go
+import plotly
 import time
 import click
-
+import flask
 print('You are using scvi-tools version:', scvi.__version__)
+print('You are using flask version:', flask.__version__)
+print('You are using plotly version:', plotly.__version__)
 
 ### set up logs and flask blueprints
 logging.basicConfig(level=logging.INFO)
