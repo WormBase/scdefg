@@ -324,6 +324,8 @@ def launch(scvi_tools_model_path,selection_columns,intro_text_html,host,port):
     ######### END OF FUNCTION DEFS #########
 
     print('🔵🔵🔵🔵🔵🔵   GOING TO RUN THE APP NOW    🔵🔵🔵🔵🔵')
+    print('host: ', host)
+    print('port: ',port)
     app.run(host=host, port=str(port))
 
     print('📙 📙 ENDED APP.RUN LOOP 📙📙')
