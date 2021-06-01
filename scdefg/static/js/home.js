@@ -181,7 +181,7 @@ $(document).ready(function () {
                         document.getElementById("results-div").scrollIntoView();
                     })
                     .fail(function () {
-                            alert("Something went wrong. Refresh the page and try again. If it keeps happening email eduardo@wormbase.org")
+                            alert("Something went wrong. Refresh the page and try again. If it keeps happening leave an issue on GitHub.")
                         });
             }
         }
