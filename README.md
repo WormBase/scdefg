@@ -1,7 +1,6 @@
 # This repo was moved to https://github.com/WormBase/scdefg
 Please refer to that repo instead.
 
-========
 
 # scdefg: scvi-tools Differential Expression Flask GUI
 
