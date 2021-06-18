@@ -1,4 +1,4 @@
-
+import os
 import time
 import warnings
 from flask import Flask, jsonify, request, render_template, Blueprint
@@ -65,7 +65,10 @@ def launch(scvi_tools_model_path, selection_columns, intro_text_html, host, port
     so you have been warned.
     """
     # the string above is used by the click library to provide the description of the --help text command line argument
+    return run(scvi_tools_model_path, selection_columns, intro_text_html, host, port, run_app=True)
 
+
+def run(scvi_tools_model_path, selection_columns, intro_text_html, host, port, run_app):
     app = Flask(__name__, template_folder="templates", static_folder="static")
     app.config["JSONIFY_PRETTYPRINT_REGULAR"] = False
     app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -319,13 +322,22 @@ def launch(scvi_tools_model_path, selection_columns, intro_text_html, host, port
 
     print('🔵🔵🔵🔵🔵🔵   GOING TO RUN THE APP NOW    🔵🔵🔵🔵🔵')
     print('host: ', host)
-    print('port: ',port)
-    app.run(host=host, port=str(port))
+    print('port: ', port)
+
+    if run_app:
+        app.run(host=host, port=int(port))
 
     print('📙 📙 ENDED APP.RUN LOOP 📙📙')
+
     return app
 
 
 if __name__ == '__main__':
     print('Starting launch function...')
     launch()
+
+else:
+    app = run(scvi_tools_model_path=os.environ["SCVI_TOOLS_MODEL_PATH"],
+              selection_columns=os.environ["APP_SELECTION_COLUMNS"],
+              intro_text_html=os.environ["APP_INTRO_TEXT_HTML"], host=os.environ["APP_HOST"], port=os.environ["APP_PORT"],
+              run_app=False)
