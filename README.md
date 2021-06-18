@@ -22,7 +22,7 @@ Text files with gene descriptions can be downloaded [here](https://www.allianceg
 Additionally, at least one column should be present in the `adata.obs`, such as for example `cell_type`. 
 The cell selection menu can be stratified according to any 
 number of columns that are present in the adata file. When launching the app, you just need to provide the name
-of each column with the -s flag , eg `-s cell_type`. So for example, to offer the user the option to group cells
+of each column with the `-s` flag , eg `-s cell_type`. So for example, to offer the user the option to group cells
 by `cell_type`, `tissue` and `experiment_code` you would launch the app using the following arguments:
 ```
 scdefg/app.py ./model -s tissue -s cell_type -s experiment_code
@@ -52,10 +52,11 @@ scdefg/app.py ./model -s tissue -s cell_type -s experiment_code
 ```
 
 
-### Here is what the selection menu would look like in this case
+## Here is what the selection menu would look like in this case
+Showing the three fields: `tissue`, `cell_type`, `experiment_code`
 
 ![](https://user-images.githubusercontent.com/12504176/107468161-44bc3580-6b46-11eb-9175-d10e9749f747.png)
 
-### Here is a view of the full page after results are returned 
+## A view of the full page after results are returned 
 
 ![](https://user-images.githubusercontent.com/12504176/107468037-07f03e80-6b46-11eb-8b27-9bccc3b5e9a6.png)
