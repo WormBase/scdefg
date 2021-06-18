@@ -65,6 +65,9 @@ def launch(scvi_tools_model_path, selection_columns, intro_text_html, host, port
     so you have been warned.
     """
     # the string above is used by the click library to provide the description of the --help text command line argument
+
+    # the launch function is called only when executing this module directly and it parses command line arguments
+    # the run function does all the rest of the work and it is called also when importing the module (e.g., by gunicorn)
     return run(scvi_tools_model_path, selection_columns, intro_text_html, host, port, run_app=True)
 
 
@@ -324,6 +327,8 @@ def run(scvi_tools_model_path, selection_columns, intro_text_html, host, port, r
     print('host: ', host)
     print('port: ', port)
 
+    # directly run the app only if executing the module from the terminal, otherwise let the main process
+    # (e.g., gunicorn) manage it
     if run_app:
         app.run(host=host, port=int(port))
 
@@ -337,6 +342,10 @@ if __name__ == '__main__':
     launch()
 
 else:
+    # this code is run if the file is imported as a module
+    #
+    # os.environ reads env variables from the system
+    # APP_SELECTION_COLUMNS is passed as a single variable, so it needs to be split
     app = run(scvi_tools_model_path=os.environ["SCVI_TOOLS_MODEL_PATH"],
               selection_columns=os.environ["APP_SELECTION_COLUMNS"].split(","),
               intro_text_html=os.environ["APP_INTRO_TEXT_HTML"], host=os.environ["APP_HOST"], port=os.environ["APP_PORT"],
