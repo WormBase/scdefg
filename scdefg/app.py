@@ -338,6 +338,6 @@ if __name__ == '__main__':
 
 else:
     app = run(scvi_tools_model_path=os.environ["SCVI_TOOLS_MODEL_PATH"],
-              selection_columns=os.environ["APP_SELECTION_COLUMNS"],
+              selection_columns=os.environ["APP_SELECTION_COLUMNS"].split(","),
               intro_text_html=os.environ["APP_INTRO_TEXT_HTML"], host=os.environ["APP_HOST"], port=os.environ["APP_PORT"],
               run_app=False)
