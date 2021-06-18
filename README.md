@@ -57,6 +57,6 @@ Showing the three fields: `tissue`, `cell_type`, `experiment_code`
 
 ![](https://user-images.githubusercontent.com/12504176/107468161-44bc3580-6b46-11eb-9175-d10e9749f747.png)
 
-## A view of the full page after results are returned 
+## A full view of the page after results are returned 
 
-![](https://user-images.githubusercontent.com/12504176/107468037-07f03e80-6b46-11eb-8b27-9bccc3b5e9a6.png)
+![screenshot2](https://user-images.githubusercontent.com/12504176/122497762-c879a900-cfa2-11eb-8432-adfdfed8c6ba.png)
