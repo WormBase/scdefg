@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn instance to serve scdefg
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/scdefg/
+Environment="PATH=/home/ubuntu/scdefg/venv/bin"
+ExecStart=/home/ubuntu/scdefg/venv/bin/gunicorn --workers 2 -t 1000 --bind unix:scdefg.sock scdefg:app
+StandardOutput=append:/var/log/scdefg.log
+StandardError=append:/var/log/scdefg.err
+
+[Install]
+WantedBy=multi-user.target
