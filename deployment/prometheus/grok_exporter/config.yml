@@ -1,0 +1,21 @@
+global:
+  config_version: 3
+input:
+  type: file
+  path: /var/log/scdefg.err
+  readall: true # Read from the beginning of the file? False means we start at the end of the file and read only new lines.
+imports:
+- type: grok_patterns
+  dir: ./patterns
+grok_patterns:
+- 'EXIM_MESSAGE [a-zA-Z ]*'
+metrics:
+- type: counter
+  name: number_of_submissions
+  help: Total number of submissions.
+  match: 'Got a submission!'
+  labels:
+    logfile: '{{base .logfile}}'
+server:
+  protocol: http
+  port: 9115
