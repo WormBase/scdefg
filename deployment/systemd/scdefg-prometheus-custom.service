@@ -1,0 +1,12 @@
+[Unit]
+Description=Prometheus exporter for scdefg logs
+Requires=scdefg.service
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/grok-exporter
+ExecStart=/home/ubuntu/grok-exporter/grok_exporter -config /home/ubuntu/grok-exporter/config.yml
+
+[Install]
+WantedBy=multi-user.target
