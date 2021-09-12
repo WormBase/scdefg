@@ -1,5 +1,4 @@
-import os
-import time
+#! python
 import warnings
 from flask import Flask, jsonify, request, render_template, Blueprint
 import logging
@@ -9,18 +8,14 @@ from io import StringIO
 import scvi
 import numpy as np
 import plotly.graph_objects as go
-import plotly
-import time
 import click
-import flask
 
 # ignore annoying pandas future warning
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 print('🧮 🧬 📊 🧫 🧪 scdefg: scvi-tools Differential Expression Flask GUI 📱 🎲 📈 🦠 📉 🎰')
-print('You are using scvi-tools version:', scvi.__version__)
-print('You are using flask version:', flask.__version__)
-print('You are using plotly version:', plotly.__version__)
+print('Using scvi-tools version', scvi.__version__)
+
 
 # set up logs and flask blueprints
 logging.basicConfig(level=logging.INFO)
@@ -336,17 +331,6 @@ def run(scvi_tools_model_path, selection_columns, intro_text_html, host, port, r
 
     return app
 
+print('💜 Launching... 💜')
+launch()
 
-if __name__ == '__main__':
-    print('Starting launch function...')
-    launch()
-
-else:
-    # this code is run if the file is imported as a module
-    #
-    # os.environ reads env variables from the system
-    # APP_SELECTION_COLUMNS is passed as a single variable, so it needs to be split
-    app = run(scvi_tools_model_path=os.environ["SCVI_TOOLS_MODEL_PATH"],
-              selection_columns=os.environ["APP_SELECTION_COLUMNS"].split(","),
-              intro_text_html=os.environ["APP_INTRO_TEXT_HTML"], host=os.environ["APP_HOST"], port=os.environ["APP_PORT"],
-              run_app=False)
