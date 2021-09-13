@@ -27,5 +27,6 @@ with open("README.md", "r", encoding="utf-8") as fh:
             "Topic :: Scientific/Engineering :: Bio-Informatics",
         ],
         python_requires='>=3.6',
+        entry_points={"console_scripts": ["scdefg-launch = scdefg.app:launch"]}
     )
 
