@@ -215,7 +215,7 @@ def launch(scvi_tools_model_path, selection_columns, intro_text_html, host, port
         try:
             de["gene_description"] = de.index.map(adata.var["gene_description"])
         except Exception as e:
-            de["gene_description_html"] = 'warning: adata.var["gene_description"] does not exist, filled with blank'
+            de["gene_description"] = 'warning: adata.var["gene_description"] does not exist, filled with blank'
 
         try:
             # for the gene descriptions text, which can be long, we add line breaks
