@@ -214,15 +214,24 @@ def launch(scvi_tools_model_path, selection_columns, intro_text_html, host, port
         # the adata.var fields should include a field named gene_id and gene_name, otherwise they will be filled with a blank default
         try:
             de["gene_description"] = de.index.map(adata.var["gene_description"])
-            # for the gene descriptions text, which can be long, we add line breaks
-            de["gene_description_html"] = de['gene_description'].str.wrap(80).str.replace('\n', '<br>')
-            de["gene_name"] = de.index.map(adata.var['gene_name']).astype(str)
-            de["gene_id"] = de.index.astype(str)
-            # de['gene_id'] = de.index.map(adata.var['gene_id'])
-
         except Exception as e:
             de["gene_description_html"] = 'warning: adata.var["gene_description"] does not exist, filled with blank'
+
+        try:
+            # for the gene descriptions text, which can be long, we add line breaks
+            de["gene_description_html"] = de['gene_description'].str.wrap(80).str.replace('\n', '<br>')
+        except Exception as e:
+            de["gene_description_html"] = 'warning: adata.var["gene_description"] does not exist, filled with blank'
+
+        try:
+            de["gene_name"] = de.index.map(adata.var['gene_name']).astype(str)
+        except Exception as e:
             de["gene_name"] = 'warning: adata.var["gene_name"] does not exist, filled with blank'
+
+        try:
+            de["gene_id"] = de.index.astype(str)
+            # de['gene_id'] = de.index.map(adata.var['gene_id'])
+        except Exception as e:
             de["gene_id"] = 'warning: adata.var["gene_id"] does not exist, filled with blank'
 
         de["gene_name"] = de["gene_name"].fillna("-")
