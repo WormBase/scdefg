@@ -1,3 +1,7 @@
+# This repo was moved to https://github.com/WormBase/scdefg
+Please refer to that repo instead.
+
+
 # scdefg: scvi-tools Differential Expression Flask GUI
 
 This app offer a single page Flask UI that allows you to quickly select cell groups and perform differential expression
