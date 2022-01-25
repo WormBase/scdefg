@@ -341,12 +341,12 @@ if __name__ == '__main__':
     print('Starting launch function...')
     launch()
 
-else:
-    # this code is run if the file is imported as a module
-    #
-    # os.environ reads env variables from the system
-    # APP_SELECTION_COLUMNS is passed as a single variable, so it needs to be split
-    app = run(scvi_tools_model_path=os.environ["SCVI_TOOLS_MODEL_PATH"],
-              selection_columns=os.environ["APP_SELECTION_COLUMNS"].split(","),
-              intro_text_html=os.environ["APP_INTRO_TEXT_HTML"], host=os.environ["APP_HOST"], port=os.environ["APP_PORT"],
-              run_app=False)
+# else:
+#     # this code is run if the file is imported as a module
+#     #
+#     # os.environ reads env variables from the system
+#     # APP_SELECTION_COLUMNS is passed as a single variable, so it needs to be split
+#     app = run(scvi_tools_model_path=os.environ["SCVI_TOOLS_MODEL_PATH"],
+#               selection_columns=os.environ["APP_SELECTION_COLUMNS"].split(","),
+#               intro_text_html=os.environ["APP_INTRO_TEXT_HTML"], host=os.environ["APP_HOST"], port=os.environ["APP_PORT"],
+#               run_app=False)
